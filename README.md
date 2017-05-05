@@ -1,4 +1,4 @@
-# Network Environment Learning (NEL) Phase for Covert Channels (with a Feedback Channel).
+# Network Environment Learning (NEL) Phase for Covert Channels (incl. a Feedback Channel).
 
 In *Network Steganography* research, a covert channel is a stealthy communication channel. Some covert channels are capable of performing a so-called **Network Environment Learning** phase (or: **NEL** phase). Such NEL-capable covert channels
 
