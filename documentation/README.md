@@ -49,13 +49,14 @@ Let us asume we have the following setup for our testbed, using IPv4 addresses a
 
 ```
        .-------------------Feedback Channel--------------------------------,  IP: 192.168.2.103
-      \./ 172.16.2.104                                                    \./ Interface: wlp4s0
+      \./ 192.168.2.104                                                    \./ Interface: wlp4s0
  ----------                 ---------------------                      ------------
  | Alice  |<----NEL-------->| Traffic Normalizer|<----NEL------------->|    Bob   |
  | (NEL   |172.16.2.104     | (e.g. Snort with a|          172.16.2.103|   (NEL   |
  | sender)|                 | transparent setup)|                      | receiver)|
  ----------                 ---------------------                      ------------
 ```
+Secondly, have a temporarily used link to exchange meta information (test traffic announcements and feedback), called the NEL link (IP addresses *192.168*.2.x). This can be, for instance, realized over a separate Ethernet link.
 
 The following table summarizes our testbed setup again:
 
