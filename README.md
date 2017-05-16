@@ -9,4 +9,4 @@ For instance, certain network packets of the covert channel may be blocked by an
 
 Although the NEL phase was originally discussed in academia about ten years ago, *no implementation was made available by other researchers*. With *NEL*, **we provide the first public implementation of a NEL phase** on the basis of *scapy* and *libpcap*. NEL is written in C and runs best under Linux. Please have a look at the [documentation](https://github.com/cdpxe/NELphase/blob/master/documentation/README.md).
 
-Please send requests and feedback to the author: Steffen Wendzel, [www.wendzel.de](http://www.wendzel.de) (wendzel (at) hs-worms (dot) de). Research on the NEL phase is currently performed by Wojciech Mazurczyk, Steffen Wendzel, Jörg Keller and Mehdi Chourib, cf. [this website](http://ih-patterns.blogspot.de/p/authorscontact.html).
+Please send requests and feedback to the author: Steffen Wendzel, [www.wendzel.de](http://www.wendzel.de) (wendzel (at) hs-worms (dot) de). Research on the NEL phase is currently performed by [Wojciech Mazurczyk, Steffen Wendzel, Jörg Keller and Mehdi Chourib](http://ih-patterns.blogspot.de/p/authorscontact.html).
