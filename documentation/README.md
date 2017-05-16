@@ -21,19 +21,19 @@ A countermeasure, such as a traffic normalizer, would then try to block the cove
 
 ## How the NEL Tool Works
 
-The NEL tool implements a NEL phase as described in (Wendzel, 2012). In this scenario, Alice and Bob (NEL sender and NEL receiver) are separated by an active warden (e.g. a traffic normalizer). The active warden blocks covert traffic between the two. If Alice sends a covert channel test packet to Bob, he may receives it but his reply to Alice could be blocked. To solve this problem, (Wendzel, 2012) proposes to utilize a third (but temporary, e.g. less secure) participant (or more general: temporary/less secure non-blocked channel) between Alice and Bob (see figure below) to exchange information that
+The NEL tool implements a NEL phase as described in (Wendzel, 2012). In this scenario, Alice and Bob (NEL sender and NEL receiver) are separated by an active warden (e.g. a traffic normalizer). The active warden blocks covert traffic between the two. If Alice sends a covert channel test packet to Bob, he may receives it but his reply to Alice could be blocked. To solve this problem, (Wendzel, 2012) proposes to utilize a third (but temporary, e.g. less secure) participant (or more general: temporary/less secure non-blocked channel) between Alice and Bob (in the figure below called the `Feedback Channel`) to exchange information that
 
 - announce test traffic and
 - provide feedback (i.e. Bob tells Alice whether test traffic was received, or not).
 
 ```
-       .-------------------Feedback Channel----------------------,
-      \./                                                       \./
- ----------              ---------------------              ------------
- | Alice  |<----NEL----->| Traffic Normalizer|<----NEL----->|    Bob   |
- | (NEL   |              | (e.g. Snort)      |              |   (NEL   |
- | sender)|              |                   |              | receiver)|
- ----------              ---------------------              ------------
+       .---------------------Feedback Channel----------------------,
+      \./                                                         \./
+ ----------               ---------------------               ------------
+ | Alice  |<-Warden Link->| Traffic Normalizer|<-Warden Link->|    Bob   |
+ | (=NEL  |               | (e.g. Snort)      |               |   (=NEL  |
+ | sender)|               |                   |               | receiver)|
+ ----------               ---------------------               ------------
 ```
 Such a scenario, in which Alice tries to perform the NEL phase with Bob and where both possess a feedback channel is implemented in this NEL tool. For instance, if Alice wants to test whether the traffic normalizer blocks IP packets in which the IPv4 *Don't Fragment* (DF) flag is set (it could be used to hide a covert bit), she first announces such a test packet via the feedback channel. Afterwards, Bob knows that he now must wait for such a packet (for a pre-defined time). Finally, Alice sends the test packet through the traffic normalizer and Bob reports back over the feedback channel whether the packet was received (in its desired form) or not.
 
@@ -45,18 +45,18 @@ First, we explain an example testbed setup, then we show how to run the NEL tool
 
 ### Example Testbed Setup
 
-Let us asume we have the following setup for our testbed, using IPv4 addresses and Ethernet interfaces. We compile the NEL tool on both systems, Alice and Bob. First of all, we have a *Warden Link* between Alice and Bob (network *172.16*.2.x). This is the link that faces a traffic normalizer. In this case, Alice and Bob reside in the same subnet, i.e. the traffic normalizer may be a transparent gateway, however, it can also be two different subnets (this does not matter).
+Let us asume we have the following setup for our testbed, using IPv4 addresses and Ethernet interfaces. We compile the NEL tool on both systems, Alice and Bob. First of all, we have a *Warden Link* between Alice and Bob (network *172.16*.2.x). This is the link that faces a traffic normalizer/active warden. In this case, Alice and Bob reside in the same subnet, i.e. the traffic normalizer may be a transparent gateway, however, it can also be two different subnets (this does not matter).
 
 ```
-       .-------------------Feedback Channel--------------------------------,  IP: 192.168.2.103
+       .-----------------------Feedback Channel (NEL link)------------------,  IP: 192.168.2.103
       \./ 192.168.2.104                                                    \./ Interface: wlp4s0
  ----------                 ---------------------                      ------------
- | Alice  |<----NEL-------->| Traffic Normalizer|<----NEL------------->|    Bob   |
+ | Alice  |<--Warden Link-->| Traffic Normalizer|<--Warden Link------->|    Bob   |
  | (NEL   |172.16.2.104     | (e.g. Snort with a|          172.16.2.103|   (NEL   |
  | sender)|                 | transparent setup)|                      | receiver)|
  ----------                 ---------------------                      ------------
 ```
-Secondly, have a temporarily used link to exchange meta information (test traffic announcements and feedback), called the NEL link (IP addresses *192.168*.2.x). This can be, for instance, realized over a separate Ethernet link.
+Secondly, Alice and Bob have a temporarily used link to exchange meta information (test traffic announcements and feedback), called the NEL link (or: `Feedback Channel`, IP addresses *192.168*.2.x). This can be, for instance, realized over a separate Ethernet connection.
 
 The following table summarizes our testbed setup again:
 
@@ -84,22 +84,35 @@ On Alice, we run `nel sender 192.168.2.103 172.16.2.103`, on Bob, we start `nel 
 
 Alice sends test packets to Bob, randomly utilizing the covert channel techniques she knows. She announces all the test traffic a priori to Bob. Bob will configure his `pcap` filter so that he catches exactly the packets announced by Alice.
 
-After an initial time (~1 sec) that Alice waits for Bob to set-up his pcap filter, Alice sends a configurable number of test packets (usually 3) to Bob. If Bob receives one of the test packets during a configurable waiting time, he acknowledges (over the feedback channel) that he received the test traffic.
+After an initial time (~1 sec) that Alice waits for Bob to set-up his pcap filter, Alice sends a configurable number of test packets (usually 3) to Bob. (Side note: technically, Alice runs `scapy` to send the test traffic.) If Bob receives one of the test packets during a configurable waiting time, he acknowledges (over the feedback channel) that he received the test traffic.
 
 As soon as one test packet was successfully sent to Bob, Alice continuously uses the protocols known as non-blocked protocols to send data to Bob.
 
-Once 200 packets were successfully transferred (either test traffic of the NEL phase or communication phase traffic), the NEL programs exist and consider the NEL phase as successful. Output will be provided that shows what traffic was sent and received and how long it took to complete the NEL phase and send the pre-defined number of packets from Alice to Bob.
+Once 200 packets were successfully transferred (either test traffic of the NEL phase or communication phase traffic), the NEL programs end and consider the data transfer as completed. Output will be provided that shows
+
+- what traffic was sent and received and
+- how long it took to complete the transfer (incl. NEL phase and successfully transferring the pre-defined number of packets from Alice to Bob).
 
 *Please Note:* We describe details of the NEL tool-based experiments as well as our new strategy for an active warden in (Mazurczyk et al., under review). Additional information (including the extension of this documentation) will be provided as soon as our work has been presented to a scientific audience and passed an academic peer-review.
+
+# Additional Background
+
+Several hiding methods are known that allow the realization of covert channels over the network, see e.g. (Mazurczyk et al., 2016) or (Wendzel et al., 2015) for a survey. Currently, the research community knows about ~150 different hiding methods for network data. However, this number does not include those methods that utilize the transferred payload (e.g. JPEG files or HTTP payload). Moreover, the number of known hiding methods continuously increases.
+
+For the NEL phase, another aspect of covert channels is also important. Covert channels can transfer internal protocols, called *control protocols* or *micro protocols* that allow the exchange of structured information in a header, see (Wendzel and Keller, 2011), (Kaur et al., 2016) and (Mazurczyk et al., 2016; Chapter 4). Announcements for test traffic as well as acknowledgements (both over the feedback channel) are realized with a simple control protocol. More advanced control protocols enable TCP-like reliability or even dynamic overlay routing.
 
 # References
 
 - **under review**: W. Mazurczyk, S. Wendzel, M. Chourib, J. Keller: *You Shall Not Pass: Countering Network Covert Channels with Dynamic Wardens*
 
-- W. Mazurczyk, S. Wendzel, S. Zander et al.: *Information Hiding in Communication Networks*, Wiley-IEEE press, 2016.
+- W. Mazurczyk, S. Wendzel, S. Zander, A. Houmansadr, K. Szczypiorski: *Information Hiding in Communication Networks*, Wiley-IEEE press, 2016.
 
 - S. Wendzel, J. Keller (2011): *[Low-attention Forwarding for Mobile Network Covert Channels](http://www.researchgate.net/profile/Steffen_Wendzel/publication/215661202_Low-attention_Forwarding_for_Mobile_Network_Covert_Channels/links/00b495349285e2ae43000000.pdf)*, in Proc. Communications and Multimedia Security (CMS 2011), LNCS vol. 7025, pp. 122-133, Springer, Ghent, Belgium, 2011.
 
 - S. Wendzel (2012): *[The Problem of Traffic Normalization Within a Covert Channel's Network Environment Learning Phase](https://www.researchgate.net/publication/229091999_The_Problem_of_Traffic_Normalization_Within_a_Covert_Channel%27s_Network_Environment_Learning_Phase?ev=srch_pub&_sg=yiWm%2Fl1DEUeQDayeMTW0oEMG5Uyxo4zfcmAAOkr6NkJtTx6g7xucnaWMAIFkzvlq_n6tx%2Fpj8MwJkZ%2FDhSCYZtVcY3G8XFjtuD0wGGY97liDms58KUp77JmWf%2F2uLjaFg_9rtZQe80mfDWVt%2BOxdHhJvIgvvSP8%2FJUpvi9Tx32b%2BASAG60z5JBglEJw%2Fx0RbUK)*, Proc. Sicherheit 2012, LNI vol. 195, pp. 149-161, 2012.
 
-- F. V. Yarochkin, S. Y. Dai et al. (2008): *Towards Adaptive Covert Communication System*, Proc. 2008 14th IEEE Pacific Rim International Symposium on Dependable Computing, pp. 153-159, IEEE, 2008.
+- F. V. Yarochkin, S. Y. Dai, C.-H. Lin, Y. Huang, S.-Y. Kuo (2008): *Towards Adaptive Covert Communication System*, Proc. 2008 14th IEEE Pacific Rim International Symposium on Dependable Computing, pp. 153-159, IEEE, 2008.
+
+- S. Wendzel, S. Zander, B. Fechner, C. Herdin: *[Pattern-based Survey and Categorization of Network Covert Channel Techniques](http://dl.acm.org/authorize?N10035)*, ACM Computing Surveys, Vol. 47(3), ACM, 2015.
+
+- J. Kaur, S. Wendzel, O. Eissa, J. Tonejc, M. Meier: *[Covert Channel-internal Control Protocols: Attacks and Defense](https://www.researchgate.net/publication/301235801_Covert_channel-internal_control_protocols_Attacks_and_defense)*, Security and Communication Networks (SCN), Vol. 9(15), pp. 2986–2997, Wiley, 2016.
