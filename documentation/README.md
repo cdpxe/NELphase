@@ -27,15 +27,67 @@ The NEL tool implements a NEL phase as described in (Wendzel, 2012). In this sce
 - provide feedback (i.e. Bob tells Alice whether test traffic was received, or not).
 
 ```
-       .-----------------Feedback Channel------------------------,
+       .-------------------Feedback Channel----------------------,
       \./                                                       \./
- ----------              ---------------------               -----------
+ ----------              ---------------------              ------------
  | Alice  |<----NEL----->| Traffic Normalizer|<----NEL----->|    Bob   |
- ----------              ---------------------               -----------
+ | (NEL   |              | (e.g. Snort)      |              |   (NEL   |
+ | sender)|              |                   |              | receiver)|
+ ----------              ---------------------              ------------
 ```
 Such a scenario, in which Alice tries to perform the NEL phase with Bob and where both possess a feedback channel is implemented in this NEL tool. For instance, if Alice wants to test whether the traffic normalizer blocks IP packets in which the IPv4 *Don't Fragment* (DF) flag is set (it could be used to hide a covert bit), she first announces such a test packet via the feedback channel. Afterwards, Bob knows that he now must wait for such a packet (for a pre-defined time). Finally, Alice sends the test packet through the traffic normalizer and Bob reports back over the feedback channel whether the packet was received (in its desired form) or not.
 
 The NEL tool allows measurements on the NEL performance (e.g. measuring how long it takes to successfully perform a NEL phase under different conditions). This can be used to test new forms of active wardens. For instance, if a *Snort*-based traffic normalizer is placed between NEL sender and NEL receiver, it can be configured with a different number of activated rules/time, influencing the time it takes to successfully perform a NEL phase.
+
+## Using the NEL Tool
+
+First, we explain an example testbed setup, then we show how to run the NEL tool, and finally explain what it does in detail.
+
+### Example Testbed Setup
+
+Let us asume we have the following setup for our testbed, using IPv4 addresses and Ethernet interfaces. We compile the NEL tool on both systems, Alice and Bob. First of all, we have a *Warden Link* between Alice and Bob (network *172.16*.2.x). This is the link that faces a traffic normalizer. In this case, Alice and Bob reside in the same subnet, i.e. the traffic normalizer may be a transparent gateway, however, it can also be two different subnets (this does not matter).
+
+```
+       .-------------------Feedback Channel--------------------------------,  IP: 192.168.2.103
+      \./ 172.16.2.104                                                    \./ Interface: wlp4s0
+ ----------                 ---------------------                      ------------
+ | Alice  |<----NEL-------->| Traffic Normalizer|<----NEL------------->|    Bob   |
+ | (NEL   |172.16.2.104     | (e.g. Snort with a|          172.16.2.103|   (NEL   |
+ | sender)|                 | transparent setup)|                      | receiver)|
+ ----------                 ---------------------                      ------------
+```
+
+The following table summarizes our testbed setup again:
+
+```
+Example Setup:      NEL-IP                   CS/CR-WARDEN-LINK-IP      CS/CR-LINK-IFACE
+                    ----------------         ---------------------     ------------------
+          Sender:   192.168.2.104*           172.16.2.104              eth0
+          Receiver: 192.168.2.103*           172.16.2.103*             wlp4s0*
+             *=value actually used, other values are not provided as cmd-line parameters!
+```
+
+### Running the NEL Tool
+
+The parameters that we use to run `nel` are as follows:
+
+```
+usage: nel  'sender'|'receiver'  <specific parameters, see below>:
+       nel  sender   CR-NEL-link-IP CR-warden-link-IP
+       nel  receiver CS-NEL-link-IP CR-warden-link-Interface
+```
+
+On Alice, we run `nel sender 192.168.2.103 172.16.2.103`, on Bob, we start `nel receiver 192.168.2.104 wlp4s0`.
+
+### What the Tool Does
+
+Alice sends test packets to Bob, randomly utilizing the covert channel techniques she knows. She announces all the test traffic a priori to Bob. Bob will configure his `pcap` filter so that he catches exactly the packets announced by Alice.
+
+After an initial time (~1 sec) that Alice waits for Bob to set-up his pcap filter, Alice sends a configurable number of test packets (usually 3) to Bob. If Bob receives one of the test packets during a configurable waiting time, he acknowledges (over the feedback channel) that he received the test traffic.
+
+As soon as one test packet was successfully sent to Bob, Alice continuously uses the protocols known as non-blocked protocols to send data to Bob.
+
+Once 200 packets were successfully transferred (either test traffic of the NEL phase or communication phase traffic), the NEL programs exist and consider the NEL phase as successful. Output will be provided that shows what traffic was sent and received and how long it took to complete the NEL phase and send the pre-defined number of packets from Alice to Bob.
 
 *Please Note:* We describe details of the NEL tool-based experiments as well as our new strategy for an active warden in (Mazurczyk et al., under review). Additional information (including the extension of this documentation) will be provided as soon as our work has been presented to a scientific audience and passed an academic peer-review.
 
