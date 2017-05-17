@@ -101,7 +101,7 @@ Some of the **NEL parameters can easily be changed** in the C header file `nel.h
 ```
 #define CR_NEL_TESTPKT_WAITING_TIME	7 /* Waiting time of NEL receiver for packets from Alice (in seconds) */
 #define NUM_COMM_PHASE_PKTS		2000  /* number of COMM phase packets to send; should be enough to succeed also under heavily-blocked circumstances */
-#define NUM_OVERALL_REQ_PKTS	200   /* number of CC packets (overall) that must go through warden before we count NEL as completed */
+#define NUM_OVERALL_REQ_PKTS	        200   /* number of CC packets (overall) that must go through warden before we count NEL as completed */
 #define NUM_COMM_PHASE_SND_PKTS_P_PROT	5 /* how many packets to send during the communication phase per non-blocked protocol in a row */
 ```
 
@@ -111,18 +111,18 @@ Some of the **NEL parameters can easily be changed** in the C header file `nel.h
 
 Each `ruleset` element consists of three elements that are added in the form `{element1, element2, element3}`:
 - a title for the covert channel technique,
-- a *scapy* command that must be in the form `a=...` (because later `a.Send()` is called), and
+- a *scapy* command that must be in the form `a=...` (because later `send(a)` is called; the destination of the NEL receiver is automatically set), and
 - a *pcap* filter rule that catches exactly this packet sent by the *scapy* command (used by the NEL receiver).
 
 The following example illustrates this array's structure:
 ```
 char *ruleset[ANNOUNCED_PROTO_NUMBERS+1][3] = {
-	/* update ANNOUNCED_PROTO_NUMBERS after adding new proto here! */
-	{ "IPv4 w/ reserved flag set",
-		"a=IP(flags=0x4)",
+        /* update ANNOUNCED_PROTO_NUMBERS after adding new proto here! */
+        { "IPv4 w/ reserved flag set",
+              "a=IP(flags=0x4)",
               "ip[6] = 0x80" },
-      ...
-      {NULL, NULL, NULL}
+        ...
+        {NULL, NULL, NULL}
    };
 ```
 If you update `ruleset`, make sure that you keep `{NULL, NULL, NULL}` at the end.
@@ -152,3 +152,6 @@ For the NEL phase, another aspect of covert channels is also important. Covert c
 - S. Wendzel, S. Zander, B. Fechner, C. Herdin: *[Pattern-based Survey and Categorization of Network Covert Channel Techniques](http://dl.acm.org/authorize?N10035)*, ACM Computing Surveys, Vol. 47(3), ACM, 2015.
 
 - J. Kaur, S. Wendzel, O. Eissa, J. Tonejc, M. Meier: *[Covert Channel-internal Control Protocols: Attacks and Defense](https://www.researchgate.net/publication/301235801_Covert_channel-internal_control_protocols_Attacks_and_defense)*, Security and Communication Networks (SCN), Vol. 9(15), pp. 2986–2997, Wiley, 2016.
+
+## Websites
+- [Information Hiding Patterns Project](http://ih-patterns.blogspot.de/p/authorscontact.html)
