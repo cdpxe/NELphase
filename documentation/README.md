@@ -141,7 +141,7 @@ For the NEL phase, another aspect of covert channels is also important. Covert c
 
 - **under review**: W. Mazurczyk, S. Wendzel, M. Chourib, J. Keller: *You Shall Not Pass: Countering Network Covert Channels with Dynamic Wardens*
 
-- W. Mazurczyk, S. Wendzel, S. Zander, A. Houmansadr, K. Szczypiorski: *Information Hiding in Communication Networks*, Wiley-IEEE press, 2016.
+- W. Mazurczyk, S. Wendzel, S. Zander, A. Houmansadr, K. Szczypiorski: *[Information Hiding in Communication Networks: Fundamentals, Mechanisms, Applications, and Countermeasures](http://eu.wiley.com/WileyCDA/WileyTitle/productCd-1118861698.html)*, Wiley-IEEE press, 2016.
 
 - S. Wendzel, J. Keller (2011): *[Low-attention Forwarding for Mobile Network Covert Channels](http://www.researchgate.net/profile/Steffen_Wendzel/publication/215661202_Low-attention_Forwarding_for_Mobile_Network_Covert_Channels/links/00b495349285e2ae43000000.pdf)*, in Proc. Communications and Multimedia Security (CMS 2011), LNCS vol. 7025, pp. 122-133, Springer, Ghent, Belgium, 2011.
 
