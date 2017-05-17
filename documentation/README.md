@@ -2,6 +2,8 @@
 
 Written by Steffen Wendzel, [www.wendzel.de](http://www.wendzel.de) (wendzel (at) hs-worms (dot) de). Research on the NEL phase is currently performed by Wojciech Mazurczyk, Steffen Wendzel, Jörg Keller and Mehdi Chourib, cf. [our project website](http://ih-patterns.blogspot.de/p/authorscontact.html).
 
+*Please Note:* We describe details of the NEL tool-based experiments as well as our new strategy for an active warden in (Mazurczyk et al., under review). These details will be added to the documentation once our work passed an academic peer review.
+
 ## Introduction
 
 In Network Steganography research, a covert channel is a stealthy communication channel (see (Mazurczyk et al., 2016) for an introduction). Some covert channels are capable of performing a so-called *Network Environment Learning* phase (or: NEL phase). Such NEL-capable covert channels
@@ -84,7 +86,7 @@ On Alice, we run `nel sender 192.168.2.103 172.16.2.103`, on Bob, we start `nel 
 
 Alice sends test packets to Bob, randomly utilizing the covert channel techniques she knows. She announces all the test traffic a priori to Bob. Bob will configure his `pcap` filter so that he catches exactly the packets announced by Alice.
 
-After an initial time (~1 sec) that Alice waits for Bob to set-up his pcap filter, Alice sends a configurable number of test packets (usually 3) to Bob. (Side note: technically, Alice runs `scapy` to send the test traffic.) If Bob receives one of the test packets during a configurable waiting time, he acknowledges (over the feedback channel) that he received the test traffic.
+After an initial time (~1 sec) that Alice waits for Bob to set-up his pcap filter, she sends a configurable number of test packets (by default: 3) to Bob. (Side note: technically, Alice runs `scapy` to send the test traffic.) If Bob receives one of the test packets during a configurable waiting time, he acknowledges (over the feedback channel) that he received the test traffic.
 
 As soon as one test packet was successfully sent to Bob, Alice continuously uses the protocols known as non-blocked protocols to send data to Bob.
 
@@ -93,7 +95,41 @@ Once 200 packets were successfully transferred (either test traffic of the NEL p
 - what traffic was sent and received and
 - how long it took to complete the transfer (incl. NEL phase and successfully transferring the pre-defined number of packets from Alice to Bob).
 
-*Please Note:* We describe details of the NEL tool-based experiments as well as our new strategy for an active warden in (Mazurczyk et al., under review). Additional information (including the extension of this documentation) will be provided as soon as our work has been presented to a scientific audience and passed an academic peer-review.
+# Fine-tuning
+
+Some of the **NEL parameters can easily be changed** in the C header file `nel.h`:
+```
+#define CR_NEL_TESTPKT_WAITING_TIME	7 /* Waiting time of NEL receiver for packets from Alice (in seconds) */
+#define NUM_COMM_PHASE_PKTS		2000  /* number of COMM phase packets to send; should be enough to succeed also under heavily-blocked circumstances */
+#define NUM_OVERALL_REQ_PKTS	200   /* number of CC packets (overall) that must go through warden before we count NEL as completed */
+#define NUM_COMM_PHASE_SND_PKTS_P_PROT	5 /* how many packets to send during the communication phase per non-blocked protocol in a row */
+```
+
+# Adding New Covert Channel Techniques
+
+**Additional covert channels can be integrated** by adding new array elements to the global array `ruleset` in `cs.c`. However, **for each a new covert channel technique that is introduced, the value `ANNOUNCED_PROTO_NUMBERS` in `nel.h` must be incremented by 1**.
+
+Each `ruleset` element consists of three elements that are added in the form `{element1, element2, element3}`:
+- a title for the covert channel technique,
+- a *scapy* command that must be in the form `a=...` (because later `a.Send()` is called), and
+- a *pcap* filter rule that catches exactly this packet sent by the *scapy* command (used by the NEL receiver).
+
+The following example illustrates this array's structure:
+```
+char *ruleset[ANNOUNCED_PROTO_NUMBERS+1][3] = {
+	/* update ANNOUNCED_PROTO_NUMBERS after adding new proto here! */
+	{ "IPv4 w/ reserved flag set",
+		"a=IP(flags=0x4)",
+              "ip[6] = 0x80" },
+      ...
+      {NULL, NULL, NULL}
+   };
+```
+If you update `ruleset`, make sure that you keep `{NULL, NULL, NULL}` at the end.
+
+# Bug Reports, Patches and Extensions
+
+Please send bug reports/patches and extensions (also in the form of patches) to the author (`wendzel (at) hs-worms (dot) de`) so that these improvements can be provided to all users.
 
 # Additional Background
 
