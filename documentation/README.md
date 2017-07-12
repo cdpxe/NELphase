@@ -1,4 +1,4 @@
-# NEL -- Tool for Researchers in Network Steganography to Simulate a Network Environment Learning Phase
+# NEL – Tool for Researchers in Network Steganography to Simulate a Network Environment Learning Phase
 
 Written by Steffen Wendzel, [www.wendzel.de](http://www.wendzel.de) (wendzel (at) hs-worms (dot) de). Research on the NEL phase is currently performed by **Wojciech Mazurczyk, Steffen Wendzel, Jörg Keller and Mehdi Chourib**, cf. [our project website](http://ih-patterns.blogspot.de/p/authorscontact.html).
 
