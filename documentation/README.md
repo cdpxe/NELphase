@@ -139,19 +139,19 @@ For the NEL phase, another aspect of covert channels is also important. Covert c
 
 # References
 
-- **under review**: W. Mazurczyk, S. Wendzel, M. Chourib, J. Keller: *You Shall Not Pass: Countering Network Covert Channels with Dynamic Wardens*
+- W. Mazurczyk, S. Wendzel, M. Chourib, J. Keller (**under review**): *You Shall Not Pass: Countering Network Covert Channels with Dynamic Wardens*
 
-- W. Mazurczyk, S. Wendzel, S. Zander, A. Houmansadr, K. Szczypiorski: *[Information Hiding in Communication Networks: Fundamentals, Mechanisms, Applications, and Countermeasures](http://eu.wiley.com/WileyCDA/WileyTitle/productCd-1118861698.html)*, Wiley-IEEE press, 2016.
+- W. Mazurczyk, S. Wendzel, S. Zander, A. Houmansadr, K. Szczypiorski (2016): *[Information Hiding in Communication Networks: Fundamentals, Mechanisms, Applications, and Countermeasures](http://eu.wiley.com/WileyCDA/WileyTitle/productCd-1118861698.html)*, Wiley-IEEE press.
 
-- S. Wendzel, J. Keller (2011): *[Low-attention Forwarding for Mobile Network Covert Channels](http://www.researchgate.net/profile/Steffen_Wendzel/publication/215661202_Low-attention_Forwarding_for_Mobile_Network_Covert_Channels/links/00b495349285e2ae43000000.pdf)*, in Proc. Communications and Multimedia Security (CMS 2011), LNCS vol. 7025, pp. 122-133, Springer, Ghent, Belgium, 2011.
+- S. Wendzel, J. Keller (2011): *[Low-attention Forwarding for Mobile Network Covert Channels](http://www.researchgate.net/profile/Steffen_Wendzel/publication/215661202_Low-attention_Forwarding_for_Mobile_Network_Covert_Channels/links/00b495349285e2ae43000000.pdf)*, in Proc. Communications and Multimedia Security (CMS 2011), LNCS vol. 7025, pp. 122-133, Springer, Ghent, Belgium.
 
-- S. Wendzel (2012): *[The Problem of Traffic Normalization Within a Covert Channel's Network Environment Learning Phase](https://www.researchgate.net/publication/229091999_The_Problem_of_Traffic_Normalization_Within_a_Covert_Channel%27s_Network_Environment_Learning_Phase?ev=srch_pub&_sg=yiWm%2Fl1DEUeQDayeMTW0oEMG5Uyxo4zfcmAAOkr6NkJtTx6g7xucnaWMAIFkzvlq_n6tx%2Fpj8MwJkZ%2FDhSCYZtVcY3G8XFjtuD0wGGY97liDms58KUp77JmWf%2F2uLjaFg_9rtZQe80mfDWVt%2BOxdHhJvIgvvSP8%2FJUpvi9Tx32b%2BASAG60z5JBglEJw%2Fx0RbUK)*, Proc. Sicherheit 2012, LNI vol. 195, pp. 149-161, 2012.
+- S. Wendzel (2012): *[The Problem of Traffic Normalization Within a Covert Channel's Network Environment Learning Phase](https://www.researchgate.net/publication/229091999_The_Problem_of_Traffic_Normalization_Within_a_Covert_Channel%27s_Network_Environment_Learning_Phase?ev=srch_pub&_sg=yiWm%2Fl1DEUeQDayeMTW0oEMG5Uyxo4zfcmAAOkr6NkJtTx6g7xucnaWMAIFkzvlq_n6tx%2Fpj8MwJkZ%2FDhSCYZtVcY3G8XFjtuD0wGGY97liDms58KUp77JmWf%2F2uLjaFg_9rtZQe80mfDWVt%2BOxdHhJvIgvvSP8%2FJUpvi9Tx32b%2BASAG60z5JBglEJw%2Fx0RbUK)*, Proc. Sicherheit 2012, LNI vol. 195, pp. 149-161.
 
-- F. V. Yarochkin, S. Y. Dai, C.-H. Lin, Y. Huang, S.-Y. Kuo (2008): *Towards Adaptive Covert Communication System*, Proc. 2008 14th IEEE Pacific Rim International Symposium on Dependable Computing, pp. 153-159, IEEE, 2008.
+- F. V. Yarochkin, S. Y. Dai, C.-H. Lin, Y. Huang, S.-Y. Kuo (2008): *Towards Adaptive Covert Communication System*, Proc. 2008 14th IEEE Pacific Rim International Symposium on Dependable Computing, pp. 153-159, IEEE.
 
-- S. Wendzel, S. Zander, B. Fechner, C. Herdin: *[Pattern-based Survey and Categorization of Network Covert Channel Techniques](http://dl.acm.org/authorize?N10035)*, ACM Computing Surveys, Vol. 47(3), ACM, 2015.
+- S. Wendzel, S. Zander, B. Fechner, C. Herdin (2015): *[Pattern-based Survey and Categorization of Network Covert Channel Techniques](http://dl.acm.org/authorize?N10035)*, ACM Computing Surveys, Vol. 47(3), ACM, 2015.
 
-- J. Kaur, S. Wendzel, O. Eissa, J. Tonejc, M. Meier: *[Covert Channel-internal Control Protocols: Attacks and Defense](https://www.researchgate.net/publication/301235801_Covert_channel-internal_control_protocols_Attacks_and_defense)*, Security and Communication Networks (SCN), Vol. 9(15), pp. 2986–2997, Wiley, 2016.
+- J. Kaur, S. Wendzel, O. Eissa, J. Tonejc, M. Meier (2016): *[Covert Channel-internal Control Protocols: Attacks and Defense](https://www.researchgate.net/publication/301235801_Covert_channel-internal_control_protocols_Attacks_and_defense)*, Security and Communication Networks (SCN), Vol. 9(15), pp. 2986–2997, Wiley, 2016.
 
 ## Websites
 - [Information Hiding Patterns Project](http://ih-patterns.blogspot.de/p/authorscontact.html)
