@@ -41,24 +41,26 @@
 #include <math.h>
 #include <time.h>
 
-#define TOOL_VERSION		"0.1"
+#define TOOL_VERSION		"0.2"
 #define WELCOME_MESSAGE		"NEL: Implementation of a Network Environment Learning (NEL) Phase\n" \
 				"     for Network Covert Channel Research\n\n" \
-				"(C) 2017 Steffen Wendzel, wendzel (at) hs-worms (dot) de, www.wendzel.de\n" \
+				"(C) 2017 Steffen Wendzel (wendzel (at) hs-worms (dot) de), Network Security Research Group/ZTT, Worms University of Applied Sciences, www.wendzel.de\n" \
 				"Version " TOOL_VERSION "\n\n"
 
 #define CR_NEL_TESTPKT_WAITING_TIME	7 /* Waiting time of NEL receiver for packets from Alice (in seconds) */
-#define NUM_COMM_PHASE_PKTS		2000  /* number of COMM phase packets to send; should be enough to succeed also under heavily-blocked circumstances */
-#define NUM_OVERALL_REQ_PKTS	200   /* number of CC packets (overall) that must go through warden before we count NEL as completed */
-#define NUM_COMM_PHASE_SND_PKTS_P_PROT	5 /* how many packets to send during the communication phase per non-blocked protocol in a row */
+#define NUM_COMM_PHASE_PKTS		1000  /* number of COMM phase packets to send; should be enough to succeed also under heavily-blocked circumstances */
+#define NUM_OVERALL_REQ_PKTS	400   /* number of CC packets (overall) that must go through warden before we count NEL as completed */
+#define NUM_COMM_PHASE_SND_PKTS_P_PROT	4 /* how many packets to send during the communication phase per non-blocked protocol in a row */
 
 
 #define MODE_UNSET		0x00
 #define MODE_SENDER		0x01
 #define MODE_RECEIVER	0x02
 
-#define ANNOUNCED_PROTO_NUMBERS		22
+#define ANNOUNCED_PROTO_NUMBERS		51
 
+/*#define INCREMENTAL_PROTO_SELECT*/
+/*#define DEBUGMODE*/
 
 typedef struct {
 	u_int32_t			announced_proto;

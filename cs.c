@@ -104,6 +104,96 @@ char *ruleset[ANNOUNCED_PROTO_NUMBERS+1][3] = {
 	{ "UDP w/ embedded data in source port",
 		"a=IP()/UDP(sport=9001)",
 		"udp[0:2]==0x2329" },
+		
+	/* new hiding techniques and filter rules added on Sep-12-2017 as proposed
+	 * by Mehdi Chourib (Mn1-29). */
+	{ "Mn1",
+		"a=IP()/UDP(sport=68, dport=67)/BOOTP(xid=123456)/DHCP(options=[(\"message-type\",\"inform\")])",
+		"udp[12:4] == 0x0001e240" },
+	{ "Mn2",
+		"a=IP(ttl=130)/ICMP()/UDPerror(chksum=1234)",
+		"icmp[14:2] == 0x4d2 and ip[8]==130" },
+	{ "Mn3",
+		"a=IP(ttl=160)/ICMP()/UDPerror(sport=11111)",
+		"icmp[8:2] == 0x2B67 and ip[8]==160" },
+	{ "Mn4",
+		"a=IP(ttl=190)/ICMP()/UDPerror(dport=22222)",
+		"icmp[10:2] == 0x56CE and ip[8]==190" },
+	{ "Mn5",
+		"a=IP(ttl=200)/ICMP()/UDP(len=3232)",
+		"icmp[12:2] == 0x0ca0 and ip[8]==200" },
+	{ "Mn6",
+		"a=IP(ttl=220)/ICMP()/TCPerror(dport=6666)",
+		"icmp[10:2] == 0x1a0a and ip[8]==220" },
+	{ "Mn7",
+		"a=IP(ttl=230)/ICMP()/TCPerror(seq=777)",
+		"icmp[12:4] == 0x00000309 and ip[8]==230" },
+	{ "Mn8",
+		"a=IP(ttl=240)/ICMP()/TCPerror(ack=8888)",
+		"icmp[16:4] == 0x000022b8 and ip[8]==240" },
+	{ "Mn9",
+		"a=IP(ttl=250)/ICMP()/TCPerror(dataofs=9999)",
+		"icmp[20] & 0xf0 == 0xf0 and ip[8]==250" },
+	{ "Mn10",
+		"a=IP(ttl=140)/ICMP()/TCPerror(reserved=111)",
+		"icmp[21] & 0x40 >= 0 and ip[8]==140" },
+	{ "Mn11",
+		"a=IP(ttl=150)/ICMP()/TCPerror(flags=0x02)",
+		"icmp[21] == 0x02 and ip[8]==150" },
+	{ "Mn12",
+		"a=IP(ttl=170)/ICMP()/TCPerror(window=222)",
+		"icmp[22:2] ==0xde and ip[8]==170" },
+	{ "Mn13",
+		"a=IP(ttl=180)/ICMP()/TCPerror(chksum=101)",
+		"icmp[24:2] == 0x65 and ip[8]==180" },
+	{ "Mn14",
+		"a=IP(ttl=120)/ICMP()/TCPerror(urgptr=1)",
+		"icmp[26:2] ==0x1 and ip[8]==120" },
+	{ "Mn15",
+		"a=IP(ttl=110)/ICMP()/ICMPerror(type=3, reserved=123)",
+		"icmp[10:2]== 0xfcff and ip[8]==110" },
+	{ "Mn16", // should work now
+		"a=IP(ttl=105)/ICMP()/ICMPerror(type=11, reserved=191)",
+		"icmp[10:2]== 0xf4ff and ip[8]==105" },
+	{ "Mn17",
+		"a=IP(ttl=106)/ICMP()/ICMPerror(type=12, unused=742)",
+		"icmp[10:2]== 0xf3ff and ip[8]==106" },
+	{ "Mn18",
+		"a=IP(ttl=107)/ICMP()/ICMPerror(type=4, unused=4343)",
+		"icmp[12:4] == 0x0010f7 and ip[8]==107" },
+	{ "Mn19",
+		"a=IP(tos=88)/SCTP()/SCTPChunkError(type=0)",
+		"ip[32] == 0 and ip[1]==0x58" },
+	{ "Mn20",
+		"a=IP(tos=99)/SCTP()/SCTPChunkError(type=1)",
+		"ip[32] == 0x01 and ip[1]==0x63" },
+	{ "Mn21",
+		"a=IP(tos=100)/SCTP()/SCTPChunkError(type=2)",
+		"ip[32] == 0x02 and  ip[1]==0x64" },
+	{ "Mn22",
+		"a=IP(tos=101)/SCTP()/SCTPChunkError(type=7)",
+		"ip[32] == 0x07 and  ip[1]==0x65" },
+	{ "Mn23",
+		"a=IP(tos=102)/SCTP()/SCTPChunkError(type=8)",
+		"ip[32] == 0x08 and  ip[1]==0x66" },
+	{ "Mn24",
+		"a=IP(tos=103)/SCTP()/SCTPChunkError(type=10)",
+		"ip[32] == 0xa and  ip[1]==0x67" },
+	{ "Mn25",
+		"a=IP(tos=104)/SCTP()/SCTPChunkError(type=11)",
+		"ip[32] == 0xb and  ip[1]==0x68" },
+	{ "Mn26",
+		"a=IP(tos=105)/SCTP()/SCTPChunkError(type=12)",
+		"ip[32] == 0xc and ip[1]==0x69" },
+	{ "Mn27",
+		"a=IP(tos=106)/SCTP()/SCTPChunkError(type=13)",
+		"ip[32] == 0xd and ip[1]==0x6a" },
+	{ "Mn28",
+		"a=IP(tos=107)/SCTP()/SCTPChunkError(type=14)",
+		"ip[32] == 0xe and ip[1]==0x6b" },
+	{ "Mn29",
+		"a=IP(tos=108)/SCTP()/SCTPChunkError(type=15)",
+		"ip[32] == 0xf and ip[1]==0x6c" },		
 	/* update ANNOUNCED_PROTO_NUMBERS after adding new proto here! */
 	{NULL, NULL, NULL}
 };
@@ -171,12 +261,19 @@ void *cs_NEL_handler(void *sockfd_ptr)
 	nel_proto_t buf;
 	int *sockfd = (int *) sockfd_ptr;
 	int i;
+#ifdef INCREMENTAL_PROTO_SELECT
+	int p = 0;
+#endif
 	
 	while (1) {
 		bzero(&buf, sizeof(buf));
+#ifdef INCREMENTAL_PROTO_SELECT
+		buf.announced_proto = p++ % ANNOUNCED_PROTO_NUMBERS;
+#else
 		/* randomly chose the protocol to try next */
-		srand(time(NULL));	
+		srand(time(NULL));
 		buf.announced_proto = rand() % ANNOUNCED_PROTO_NUMBERS;
+#endif
 		if ((n = send(*sockfd, &buf, sizeof(buf), 0)) < 0) {
 			perror("send()");
 			sleep(1);
