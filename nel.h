@@ -41,7 +41,7 @@
 #include <math.h>
 #include <time.h>
 
-#define TOOL_VERSION		"0.2"
+#define TOOL_VERSION		"0.2.1"
 #define WELCOME_MESSAGE		"NEL: Implementation of a Network Environment Learning (NEL) Phase\n" \
 				"     for Network Covert Channel Research\n\n" \
 				"(C) 2017 Steffen Wendzel (wendzel (at) hs-worms (dot) de), Network Security Research Group/ZTT, Worms University of Applied Sciences, www.wendzel.de\n" \
