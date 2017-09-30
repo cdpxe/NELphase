@@ -23,7 +23,7 @@ A countermeasure, such as a traffic normalizer, would then try to block the cove
 
 ## How the NEL Tool Works
 
-The NEL tool implements a NEL phase as described in (Wendzel, 2012). In this scenario, *Alice* (NEL sender) and *Bob* (NEL receiver) are separated by an active warden (e.g. a traffic normalizer). The active warden blocks covert traffic between the two. If Alice sends a covert channel test packet to Bob, he may receives it but his reply to Alice could be blocked. To solve this problem, (Wendzel, 2012) proposes to utilize a third (but temporary, e.g. less secure) participant (or more general: temporary/less secure non-blocked channel) between Alice and Bob (in the figure below called the `Feedback Channel`) to exchange information that
+The NEL tool implements a sophisticated NEL phase as described in (Wendzel, 2012). In this scenario, *Alice* (NEL sender) and *Bob* (NEL receiver) are separated by an active warden (e.g. a traffic normalizer). The active warden blocks covert traffic between the two. If Alice sends a covert channel test packet to Bob, he may receives it but his reply to Alice could be blocked. To solve this problem, (Wendzel, 2012) proposes to utilize a third (but temporary, e.g. less secure) participant (or more general: temporary/less secure non-blocked channel) between Alice and Bob (in the figure below called the `Feedback Channel`) to exchange information that
 
 - announce test traffic and
 - provide feedback (i.e. Bob tells Alice whether test traffic was received, or not).
