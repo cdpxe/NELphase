@@ -79,16 +79,15 @@ int rc_chk_for_test_pkts(u_int32_t announced_proto)
 	fprintf(stderr, "waiting for test pkts ... ");
 	alarm(CR_NEL_TESTPKT_WAITING_TIME);
 	signal(SIGALRM, cr_pcap_interrupt_alarm_handler);
-	pcap_loop(handle, 1 /* just one pkt needed to pass */, pkt_handler,
+	pcap_loop(handle, NUM_COMM_PHASE_SND_PKTS_P_PROT /* just one pkt needed to pass */, pkt_handler,
 		NULL);
 	/* wait until timeout */
-	
 	pcap_close(handle);
 	
 	if (test_traffic_pkt_cnt >= 1) {
-		fprintf(stderr, "\tsuccess.\n");
+		fprintf(stderr, "\tsuccess. Received %i test packets for this CC type!\n", test_traffic_pkt_cnt);
 	} else {
-		fprintf(stderr, "\ttimeout\n");
+		fprintf(stderr, "\ttimeout. Received 0 test packets for this CC type!\n");
 	}
 	
 	 /* return no. of recv'd test traffic pkts */

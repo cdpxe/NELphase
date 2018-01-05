@@ -41,16 +41,17 @@
 #include <math.h>
 #include <time.h>
 
-#define TOOL_VERSION		"0.2.1"
+#define TOOL_VERSION		"0.2.2"
 #define WELCOME_MESSAGE		"NEL: Implementation of a Network Environment Learning (NEL) Phase\n" \
 				"     for Network Covert Channel Research\n\n" \
-				"(C) 2017 Steffen Wendzel (wendzel (at) hs-worms (dot) de), Network Security Research Group/ZTT, Worms University of Applied Sciences, www.wendzel.de\n" \
+				"(C) 2017-2018 Steffen Wendzel (wendzel (at) hs-worms (dot) de), Network Security Research Group/ZTT, Worms University of Applied Sciences, www.wendzel.de\n" \
 				"Version " TOOL_VERSION "\n\n"
 
 #define CR_NEL_TESTPKT_WAITING_TIME	5 /* Waiting time of NEL receiver for packets from Alice (in seconds) */
 #define NUM_COMM_PHASE_PKTS		3000  /* number of COMM phase packets to send; should be enough to succeed also under heavily-blocked circumstances */
 #define NUM_OVERALL_REQ_PKTS		200   /* number of CC packets (overall) that must go through warden before we count NEL as completed */
-#define NUM_COMM_PHASE_SND_PKTS_P_PROT	4 /* how many packets to send during the communication phase per non-blocked protocol in a row */
+#define NUM_COMM_PHASE_SND_PKTS_P_PROT	4 /* how many packets to send during the *COMM* phase per non-blocked protocol in a row */
+#define NUM_NEL_TESTPKT_SND_PKTS_P_PROT 4 /* how many packets to be sent per CC type during *NEL* phase */
 
 
 #define MODE_UNSET		0x00
