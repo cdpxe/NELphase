@@ -254,7 +254,8 @@ void send_CC_packet(u_int32_t announced_proto)
  * NEL PHASE
  *************************/
 
-/* Cs: send announcements to receiver + receive results (blocking I/O) */
+/* CS: 1) send announcements to receiver, 2) transfer the CC test packets, and
+ * 3) receive results (blocking I/O) via NEL meta communication channel. */
 void *cs_NEL_handler(void *sockfd_ptr)
 {
 	int n;
@@ -286,6 +287,9 @@ void *cs_NEL_handler(void *sockfd_ptr)
 		for (i = 0; i < NUM_NEL_TESTPKT_SND_PKTS_P_PROT /*XXX: NEL! */; i++)
 			send_CC_packet(buf.announced_proto);
 		
+		/* after we sent the test packets for the selected hiding technique,
+		 * wait for the answer of the CR that informs us about the number of
+		 * packets it received of the particular CC hiding technique. */
 		if ((n = recv(*sockfd, &buf, sizeof(buf), 0)) < 0) {
 			perror("recv()");
 			sleep(1);
@@ -293,7 +297,7 @@ void *cs_NEL_handler(void *sockfd_ptr)
 			fprintf(stderr, "%%");
 			sleep(1);
 		} else {
-			/* update P_nb */
+			/* update P_nb accordingly */
 			P_nb[buf.announced_proto] = buf.result;
 			fprintf(stderr, "\trecv'd feedback for proto=%u, "
 					"result=%u, ", buf.announced_proto,
