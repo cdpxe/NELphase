@@ -3,7 +3,7 @@
  *
  * Keywords: Covert Channels, Network Steganography
  *
- * Copyright (C) 2017 Steffen Wendzel, steffen (at) wendzel (dot) de
+ * Copyright (C) 2017-2018 Steffen Wendzel, steffen (at) wendzel (dot) de
  *                    http://www.wendzel.de
  *
  * Please have a look at our academic publications on the NEL phase
@@ -28,14 +28,20 @@
 
 #include "nel.h"
 
-int test_traffic_pkt_cnt = 0;
-pcap_t *handle;
-
 extern char *ruleset[ANNOUNCED_PROTO_NUMBERS][3];
+int test_traffic_pkt_cnt = 0;
+int stop_test_traffic_pcap_loop = 0;
+pcap_t *handle;
 
 void cr_pcap_interrupt_alarm_handler(int a)
 {
 	pcap_breakloop(handle);
+	stop_test_traffic_pcap_loop = 1; /* stop pcap_dispatch() loop */
+	if (test_traffic_pkt_cnt >= 1) {
+	    fprintf(stderr, "\tsuccess. Received %i test packets for this CC type!\n", test_traffic_pkt_cnt);
+	} else {
+	    fprintf(stderr, "\ttimeout. Received 0 test packets for this CC type!\n");
+	}
 }
 
 void pkt_handler(u_char *user, const struct pcap_pkthdr *h, const u_char *byte)
@@ -48,13 +54,16 @@ int rc_chk_for_test_pkts(u_int32_t announced_proto)
 	extern char *net_if;
 	int snapshot_len = 100;
 	char *filter_str = NULL;
-	int promisc = 0;
-	int timeout = 5000; /* does not seem to work; I use alarm() instead */
+	int promisc = 1;
+	int timeout = 100; /* this prevents pcap from blocking for too long
+			   * (in case we switch back to pcap_loop, which I
+			   * should not because of side-effects) */
 	struct bpf_program filter;
 	char err_buf[PCAP_ERRBUF_SIZE];
+	struct sigaction sa;
 	
 	filter_str = ruleset[announced_proto][2];
-	
+	stop_test_traffic_pcap_loop = 0;
 	test_traffic_pkt_cnt = 0; /* reset packet counter for test traffic */
 	
 	if ((handle = pcap_open_live(net_if, snapshot_len, promisc, timeout,
@@ -78,18 +87,26 @@ int rc_chk_for_test_pkts(u_int32_t announced_proto)
 	
 	fprintf(stderr, "waiting for test pkts ... ");
 	alarm(CR_NEL_TESTPKT_WAITING_TIME);
+	/* reset alarm flags here, just in case, i.e. to prevent that SA_RESTART
+	 * is set and we receive unexpected side-effects when interrupting
+	 * pcap_dispatch() or pcap_loop() */
+	sa.sa_flags = 0; // never use: SA_RESTART;
+	sigaction(SIGALRM, &sa, NULL);
 	signal(SIGALRM, cr_pcap_interrupt_alarm_handler);
-	pcap_loop(handle, NUM_COMM_PHASE_SND_PKTS_P_PROT /* just one pkt needed to pass */, pkt_handler,
-		NULL);
+	/* make pcap non-blocking so that pcap_dispatch() always returns
+	 * immediately */
+	if (pcap_setnonblock(handle, 1, err_buf) == -1) {
+		perror("pcap_setnonblock()");
+		sleep(1);
+		return 0;
+	}
+
+	while(stop_test_traffic_pcap_loop == 0) {
+		pcap_dispatch(handle, 0 /* =inf */, pkt_handler, NULL);
+		usleep(10); /* prevent 100% cpu consumption */
+	}
 	/* wait until timeout */
 	pcap_close(handle);
-	
-	if (test_traffic_pkt_cnt >= 1) {
-		fprintf(stderr, "\tsuccess. Received %i test packets for this CC type!\n", test_traffic_pkt_cnt);
-	} else {
-		fprintf(stderr, "\ttimeout. Received 0 test packets for this CC type!\n");
-	}
-	
 	 /* return no. of recv'd test traffic pkts */
 	return test_traffic_pkt_cnt;
 }
