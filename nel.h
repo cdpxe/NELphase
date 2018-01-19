@@ -41,7 +41,7 @@
 #include <math.h>
 #include <time.h>
 
-#define TOOL_VERSION		"0.2.3"
+#define TOOL_VERSION		"0.2.4"
 #define WELCOME_MESSAGE		"NEL: Implementation of a Network Environment Learning (NEL) Phase\n" \
 				"     for Network Covert Channel Research\n\n" \
 				"(C) 2017-2018 Steffen Wendzel (wendzel (at) hs-worms (dot) de), Network Security Research Group/ZTT, Worms University of Applied Sciences, www.wendzel.de\n" \
@@ -62,6 +62,8 @@
 
 /*#define INCREMENTAL_PROTO_SELECT*/
 /*#define DEBUGMODE*/
+
+#define min(a, b)		(a < b ? a : b)
 
 typedef struct {
 	u_int32_t			announced_proto;

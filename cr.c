@@ -35,17 +35,29 @@ pcap_t *handle;
 
 void cr_pcap_interrupt_alarm_handler(int a)
 {
+	extern int recv_through_warden_pkt_cnt;
+	
 	pcap_breakloop(handle);
 	stop_test_traffic_pcap_loop = 1; /* stop pcap_dispatch() loop */
 	if (test_traffic_pkt_cnt >= 1) {
 	    fprintf(stderr, "\tsuccess. Received %i test packets for this CC type!\n", test_traffic_pkt_cnt);
+	    
+	    /* If the NEL thread received more than NUM_NEL_TESTPKT_SND_PKTS_P_PROT test packets:
+	     * subtract the NUM_NEL_TESTPKT_SND_PKTS_P_PROT test packets also from the COM phase. */
+	    if (recv_through_warden_pkt_cnt >= NUM_NEL_TESTPKT_SND_PKTS_P_PROT
+	        /*&& (test_traffic_pkt_cnt - NUM_NEL_TESTPKT_SND_PKTS_P_PROT)*/) {
+		    fprintf(stderr, "\t\tNEL thread: subtracting %i packets from peer thread's COM counter\n",
+		    			min(test_traffic_pkt_cnt, NUM_NEL_TESTPKT_SND_PKTS_P_PROT));
+		    recv_through_warden_pkt_cnt -= min(test_traffic_pkt_cnt, NUM_NEL_TESTPKT_SND_PKTS_P_PROT);
+	    }
 	} else {
 	    fprintf(stderr, "\ttimeout. Received 0 test packets for this CC type!\n");
 	}
 }
 
-void pkt_handler(u_char *user, const struct pcap_pkthdr *h, const u_char *byte)
+void pkt_handler_NEL(u_char *user, const struct pcap_pkthdr *h, const u_char *byte)
 {
+	 /* increment NEL phase probe packet counter */
 	test_traffic_pkt_cnt++;
 }
 
@@ -102,7 +114,7 @@ int rc_chk_for_test_pkts(u_int32_t announced_proto)
 	}
 
 	while(stop_test_traffic_pcap_loop == 0) {
-		pcap_dispatch(handle, 0 /* =inf */, pkt_handler, NULL);
+		pcap_dispatch(handle, 0 /* =inf */, pkt_handler_NEL, NULL);
 		usleep(10); /* prevent 100% cpu consumption */
 	}
 	/* wait until timeout */

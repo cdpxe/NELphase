@@ -76,11 +76,12 @@ void print_time_diff(void)
 }
 /* \ end: from CCEAP: client.c / */
 
-void pkt_handler_measure(u_char *user, const struct pcap_pkthdr *h,
+void pkt_handler_COM(u_char *user, const struct pcap_pkthdr *h,
 			 const u_char *bytes)
 {
 	recv_through_warden_pkt_cnt++;
-	if (recv_through_warden_pkt_cnt == NUM_OVERALL_REQ_PKTS) {
+
+	if (recv_through_warden_pkt_cnt >= NUM_OVERALL_REQ_PKTS) {
 		fprintf(stderr, "MEASUREMENT COMPLETED; received %i CC "
 			"packets through warden link (through combined "
 			"pcap filter, i.e. excluding non-CC traffic).\n",
@@ -156,7 +157,7 @@ void *cr_measure(void *unused)
 		sleep(1);
 	}
 	print_time_diff();
-	pcap_loop(handle_measure, 0 /*inf pkts*/, pkt_handler_measure, NULL);
+	pcap_loop(handle_measure, 0 /*inf pkts*/, pkt_handler_COM, NULL);
 	
 	pcap_close(handle_measure);
 	return NULL;
