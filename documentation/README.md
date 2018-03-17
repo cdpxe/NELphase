@@ -1,12 +1,12 @@
 # NEL – Tool for Researchers in Network Steganography to Simulate a Network Environment Learning Phase
 
-Written by Steffen Wendzel, [www.wendzel.de](http://www.wendzel.de) (wendzel (at) hs-worms (dot) de). Research on the NEL phase is currently performed by **Wojciech Mazurczyk, Steffen Wendzel, Jörg Keller and Mehdi Chourib**, cf. [our project website](http://ih-patterns.blogspot.de/p/authorscontact.html).
+Written by *Steffen Wendzel*, [www.wendzel.de](http://www.wendzel.de) (wendzel (at) hs-worms (dot) de). Research on the NEL phase is currently performed by multiple authors, cf. [our project website](http://ih-patterns.blogspot.de/p/authorscontact.html).
 
 *Please Note:* We describe details of the NEL tool-based experiments as well as our new strategy for an active warden in (Mazurczyk et al., under review). These details will be added to the documentation once our work passed an academic peer review.
 
 ## Introduction
 
-In Network Steganography research, a covert channel is a stealthy communication channel (see (Mazurczyk et al., 2016) for an introduction). Some covert channels are capable of performing a so-called *Network Environment Learning* phase (or: NEL phase). Such NEL-capable covert channels
+In *Network Steganography* research, a *covert channel* is a stealthy communication channel (see [here](https://cacm.acm.org/magazines/2018/1/223894/fulltext) for a short overview or (Mazurczyk et al., 2016) for a detailled introduction). Some covert channels are capable of performing a so-called *Network Environment Learning* phase (or: NEL phase). Such NEL-capable covert channels
 
 - can determine how exactly data can be covertly exchanged between sender and receiver, and
 - which types stealthy data transmissions will be blocked/modified by an active warden (e.g. a firewall or a traffic normalizer).
@@ -99,7 +99,7 @@ Once 200 packets were successfully transferred (either test traffic of the NEL p
 
 Some of the **NEL parameters can easily be changed** in the C header file `nel.h`:
 ```
-#define CR_NEL_TESTPKT_WAITING_TIME	7 /* Waiting time of NEL receiver for packets from Alice (in seconds) */
+#define CR_NEL_TESTPKT_WAITING_TIME	5 /* Waiting time of NEL receiver for packets from Alice (in seconds) */
 #define NUM_COMM_PHASE_PKTS		2000  /* number of COMM phase packets to send; should be enough to succeed also under heavily-blocked circumstances */
 #define NUM_OVERALL_REQ_PKTS	        200   /* number of CC packets (overall) that must go through warden before we count NEL as completed */
 #define NUM_COMM_PHASE_SND_PKTS_P_PROT	5 /* how many packets to send during the communication phase per non-blocked protocol in a row */
@@ -141,17 +141,19 @@ For the NEL phase, another aspect of covert channels is also important. Covert c
 
 - W. Mazurczyk, S. Wendzel, M. Chourib, J. Keller (**under review**): *You Shall Not Pass: Countering Network Covert Channels with Dynamic Wardens*
 
+- W. Mazurczyk, S. Wendzel: *[Information Hiding – Challenges for Forensic Experts](https://dl.acm.org/citation.cfm?id=3158416)* (2017), in: Communications of the ACM, 2018.
+
 - W. Mazurczyk, S. Wendzel, S. Zander, A. Houmansadr, K. Szczypiorski (2016): *[Information Hiding in Communication Networks: Fundamentals, Mechanisms, Applications, and Countermeasures](http://eu.wiley.com/WileyCDA/WileyTitle/productCd-1118861698.html)*, Wiley-IEEE press.
 
 - S. Wendzel, J. Keller (2011): *[Low-attention Forwarding for Mobile Network Covert Channels](http://www.researchgate.net/profile/Steffen_Wendzel/publication/215661202_Low-attention_Forwarding_for_Mobile_Network_Covert_Channels/links/00b495349285e2ae43000000.pdf)*, in Proc. Communications and Multimedia Security (CMS 2011), LNCS vol. 7025, pp. 122-133, Springer, Ghent, Belgium.
 
 - S. Wendzel (2012): *[The Problem of Traffic Normalization Within a Covert Channel's Network Environment Learning Phase](https://www.researchgate.net/publication/229091999_The_Problem_of_Traffic_Normalization_Within_a_Covert_Channel%27s_Network_Environment_Learning_Phase?ev=srch_pub&_sg=yiWm%2Fl1DEUeQDayeMTW0oEMG5Uyxo4zfcmAAOkr6NkJtTx6g7xucnaWMAIFkzvlq_n6tx%2Fpj8MwJkZ%2FDhSCYZtVcY3G8XFjtuD0wGGY97liDms58KUp77JmWf%2F2uLjaFg_9rtZQe80mfDWVt%2BOxdHhJvIgvvSP8%2FJUpvi9Tx32b%2BASAG60z5JBglEJw%2Fx0RbUK)*, Proc. Sicherheit 2012, LNI vol. 195, pp. 149-161.
 
-- F. V. Yarochkin, S. Y. Dai, C.-H. Lin, Y. Huang, S.-Y. Kuo (2008): *Towards Adaptive Covert Communication System*, Proc. 2008 14th IEEE Pacific Rim International Symposium on Dependable Computing, pp. 153-159, IEEE.
-
 - S. Wendzel, S. Zander, B. Fechner, C. Herdin (2015): *[Pattern-based Survey and Categorization of Network Covert Channel Techniques](http://dl.acm.org/authorize?N10035)*, ACM Computing Surveys, Vol. 47(3), ACM, 2015.
 
 - J. Kaur, S. Wendzel, O. Eissa, J. Tonejc, M. Meier (2016): *[Covert Channel-internal Control Protocols: Attacks and Defense](https://www.researchgate.net/publication/301235801_Covert_channel-internal_control_protocols_Attacks_and_defense)*, Security and Communication Networks (SCN), Vol. 9(15), pp. 2986–2997, Wiley, 2016.
+
+- F. V. Yarochkin, S. Y. Dai, C.-H. Lin, Y. Huang, S.-Y. Kuo (2008): *Towards Adaptive Covert Communication System*, Proc. 2008 14th IEEE Pacific Rim International Symposium on Dependable Computing, pp. 153-159, IEEE.
 
 ## Websites
 - [Information Hiding Patterns Project](http://ih-patterns.blogspot.de/p/authorscontact.html)
