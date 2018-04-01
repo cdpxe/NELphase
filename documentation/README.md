@@ -100,9 +100,10 @@ Once 200 packets were successfully transferred (either test traffic of the NEL p
 Some of the **NEL parameters can easily be changed** in the C header file `nel.h`:
 ```
 #define CR_NEL_TESTPKT_WAITING_TIME	5 /* Waiting time of NEL receiver for packets from Alice (in seconds) */
-#define NUM_COMM_PHASE_PKTS		2000  /* number of COMM phase packets to send; should be enough to succeed also under heavily-blocked circumstances */
-#define NUM_OVERALL_REQ_PKTS	        200   /* number of CC packets (overall) that must go through warden before we count NEL as completed */
-#define NUM_COMM_PHASE_SND_PKTS_P_PROT	5 /* how many packets to send during the communication phase per non-blocked protocol in a row */
+#define NUM_COMM_PHASE_PKTS		3000  /* number of COMM phase packets to send; should be enough to succeed also under heavily-blocked circumstances */
+#define NUM_OVERALL_REQ_PKTS		200   /* number of CC packets (overall) that must go through warden before we count NEL as completed */
+#define NUM_COMM_PHASE_SND_PKTS_P_PROT	5 /* how many packets to send during the *COMM* phase per non-blocked protocol in a row */
+#define NUM_NEL_TESTPKT_SND_PKTS_P_PROT 5 /* how many packets to be sent per CC type during *NEL* phase */
 ```
 
 # Adding New Covert Channel Techniques
