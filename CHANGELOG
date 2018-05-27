@@ -4,6 +4,7 @@ v. 0.2.4:
  * Changed several details in terms of the packet counting and
    general NEL parameters.
  * Changed utilization of libpcap.
+ * Improved documentation.
 
 v. 0.2.1-0.2.3:
  * Improved several aspects of the documentation
