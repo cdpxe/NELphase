@@ -6,7 +6,7 @@ Written by *Steffen Wendzel*, [www.wendzel.de](http://www.wendzel.de) (wendzel (
 
 ## Introduction
 
-In *Network Steganography* research, a *covert channel* is a stealthy communication channel (see [here](https://cacm.acm.org/magazines/2018/1/223894/fulltext) for a short overview or (Mazurczyk et al., 2016) for a detailled introduction). Some covert channels are capable of performing a so-called *Network Environment Learning* phase (or: NEL phase). Such NEL-capable covert channels
+In *Network Steganography* research, a *covert channel* is a stealthy communication channel (see [this paper](https://cacm.acm.org/magazines/2018/1/223894/fulltext), [our short video](https://vimeo.com/245230404) (4min) or [our overview video](http://ih-patterns.blogspot.de/2018/04/talk-on-information-hiding-and-hiding.html) (31min) for an introduction or (Mazurczyk et al., 2016) for detailled fundamentals). Some covert channels are capable of performing a so-called *Network Environment Learning* phase (or: NEL phase). Such NEL-capable covert channels
 
 - can determine how exactly data can be covertly exchanged between sender and receiver, and
 - which types stealthy data transmissions will be blocked/modified by an active warden (e.g. a firewall or a traffic normalizer).
@@ -142,7 +142,8 @@ For the NEL phase, another aspect of covert channels is also important. Covert c
 
 - W. Mazurczyk, S. Wendzel, M. Chourib, J. Keller (**under review**): *You Shall Not Pass: Countering Network Covert Channels with Dynamic Wardens*
 
-- W. Mazurczyk, S. Wendzel: *[Information Hiding – Challenges for Forensic Experts](https://dl.acm.org/citation.cfm?id=3158416)* (2017), in: Communications of the ACM, 2018.
+- W. Mazurczyk, S. Wendzel: [Information Hiding – Challenges for Forensic Experts](https://cacm.acm.org/magazines/2018/1/223894-information-hiding/fulltext), Communications of the ACM, Vol. 61(1), pp. 86-94, January 2018. [Summarizing video](https://vimeo.com/245230404)
+
 
 - W. Mazurczyk, S. Wendzel, S. Zander, A. Houmansadr, K. Szczypiorski (2016): *[Information Hiding in Communication Networks: Fundamentals, Mechanisms, Applications, and Countermeasures](http://eu.wiley.com/WileyCDA/WileyTitle/productCd-1118861698.html)*, Wiley-IEEE press.
 
