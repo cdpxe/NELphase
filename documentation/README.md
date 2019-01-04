@@ -2,8 +2,6 @@
 
 Written by *Steffen Wendzel*, [www.wendzel.de](http://www.wendzel.de) (wendzel (at) hs-worms (dot) de). Research on the NEL phase is currently performed by multiple authors, cf. [our project website](http://ih-patterns.blogspot.de/p/authorscontact.html).
 
-*Please Note:* We describe details of the *NEL tool*-based experiments as well as our new strategy for an active warden in (Mazurczyk et al., under review). These details will be added to the documentation once our work passed an academic peer review.
-
 ## Introduction
 
 In *Network Steganography* research, a *covert channel* is a stealthy communication channel (see [this paper](https://cacm.acm.org/magazines/2018/1/223894/fulltext), [our short video](https://vimeo.com/245230404) (4min) or [our overview video](http://ih-patterns.blogspot.de/2018/04/talk-on-information-hiding-and-hiding.html) (31min) for an introduction or (Mazurczyk et al., 2016) for detailled fundamentals). Some covert channels are capable of performing a so-called [**Network Environment Learning** phase](https://www.researchgate.net/publication/229091999_The_Problem_of_Traffic_Normalization_Within_a_Covert_Channel%27s_Network_Environment_Learning_Phase?ev=srch_pub&_sg=yiWm%2Fl1DEUeQDayeMTW0oEMG5Uyxo4zfcmAAOkr6NkJtTx6g7xucnaWMAIFkzvlq_n6tx%2Fpj8MwJkZ%2FDhSCYZtVcY3G8XFjtuD0wGGY97liDms58KUp77JmWf%2F2uLjaFg_9rtZQe80mfDWVt%2BOxdHhJvIgvvSP8%2FJUpvi9Tx32b%2BASAG60z5JBglEJw%2Fx0RbUK) (or: NEL phase). Such NEL-capable covert channels
@@ -19,7 +17,7 @@ Although the NEL phase was originally discussed in academia about ten years ago,
 
 Regarding (Yarochkin et al., 2008), adaptive covert channels perform two different phases. In the so-called *Network Environment Learning* phase (NEL phase), peers (e.g. a covert sender and a receiver) try to determine which protocols can be used to covertly communicate and which protocols are blocked. This is done by sending test traffic from one peer to the other. After the NEL phase found suitable protocols, the *Communication* phase starts, in which actual covert traffic is exchanged. However, the NEL phase is continuously performed to update the list of non-blocked protocols from time to time. This approach was later extended by (Wendzel and Keller, 2011) and (Wendzel, 2012), i.e. made more fine-grained.
 
-A countermeasure, such as a traffic normalizer, would then try to block the covert traffic of the NEL and Communication phases. However, the NEL phase can be improved so that it can be performed even in the presence of a traffic normalizer (or other forms of *active wardens*), see (Wendzel, 2012) for details.
+A countermeasure, such as a traffic normalizer, would then try to block the covert traffic of the NEL and Communication phases. However, the NEL phase can be improved so that it can be performed even in the presence of a traffic normalizer (or other forms of *active wardens*), see (Wendzel, 2012) for details. NEL-capable covert channels can be currently only efficiently combated by so-called *dynamic wardens* that modify their own filter behavior in a constant manner, cf. (Mazurczyk et al., 2019).
 
 ## How the NEL Tool Works
 
@@ -128,6 +126,14 @@ char *ruleset[ANNOUNCED_PROTO_NUMBERS+1][3] = {
 ```
 If you update `ruleset`, make sure that you keep `{NULL, NULL, NULL}` at the end.
 
+# Scientific Work Using NELTool
+
+NELTool was currently used to perform experiments for the following scientific projects:
+
+- Testing how a new type of active warden, a so-called *dynamic warden*, performs in terms of combating NEL-capable covert channels. The publication appeared in the top-journal *Future Generation Computer Systems* (impact factor 4,6x), cf. (Mazurczyk et al., 2019).
+
+If you used NELTool for your experiments, let me know and I am happy to link your research here.
+
 # Bug Reports, Patches and Extensions
 
 Please send bug reports/patches and extensions (also in the form of patches) to the author (`wendzel (at) hs-worms (dot) de`) so that these improvements can be provided to all users.
@@ -140,7 +146,7 @@ For the NEL phase, another aspect of covert channels is also important. Covert c
 
 # References
 
-- W. Mazurczyk, S. Wendzel, M. Chourib, J. Keller (**under review**): *You Shall Not Pass: Countering Network Covert Channels with Dynamic Wardens*
+- W. Mazurczyk, S. Wendzel, M. Chourib, J. Keller: [Countering Adaptive Network Covert Communication with Dynamic Wardens](https://www.sciencedirect.com/science/article/pii/S0167739X18316133), Future Generation Computer Systems (FGCS), Vol. 94, pp. 712-725, Elsevier, 2019.
 
 - W. Mazurczyk, S. Wendzel: [Information Hiding – Challenges for Forensic Experts](https://cacm.acm.org/magazines/2018/1/223894-information-hiding/fulltext), Communications of the ACM, Vol. 61(1), pp. 86-94, January 2018. [Summarizing video](https://vimeo.com/245230404)
 
