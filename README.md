@@ -4,6 +4,8 @@ In *Network Steganography* research, a covert channel is a stealthy communicatio
 
 For instance, a typical covert channel technique is to embed secret data in reserved or unused bits of protocol headers. A typical firewall filter could simply clear the bit to prevent such a covert channel. During the NEL phase, communicating covert channel peers can determine such a filter rule and switch to alternative covert channels.
 
-Although the NEL phase was originally discussed in academia about ten years ago, *no implementation was made available by other researchers*. With *NEL*, **we provide the first public implementation of a NEL phase** on the basis of *scapy* and *libpcap*. NEL is written in C and runs best under Linux. Please have a look at the [documentation](https://github.com/cdpxe/NELphase/blob/master/documentation/README.md).
+Although the NEL phase was originally discussed in academia about ten years ago, *no implementation was made available by other researchers*. With *NEL*, **we provide the first public implementation of a NEL phase** on the basis of *scapy* and *libpcap*. NEL is written in C and runs best under Linux.
 
-Please send requests and feedback to the author ([Steffen Wendzel](http://www.wendzel.de)) (`wendzel (at) hs-worms (dot) de`).
+**Documentation:** Please have a look at the *[documentation](https://github.com/cdpxe/NELphase/blob/master/documentation/README.md)*.
+
+**Feedback:** Please send requests and feedback to the author ([Steffen Wendzel](http://www.wendzel.de)) (`wendzel (at) hs-worms (dot) de`).
