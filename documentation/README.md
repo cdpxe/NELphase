@@ -1,4 +1,4 @@
-# NEL – Tool for Researchers in Network Steganography to Simulate a Network Environment Learning Phase
+# NEL – A Tool to Simulate a Network Environment Learning Phase in Network Steganography
 
 Written by *Steffen Wendzel*, [www.wendzel.de](http://www.wendzel.de) (wendzel (at) hs-worms (dot) de). Research on the NEL phase is currently performed by multiple authors, cf. [our project website](http://ih-patterns.blogspot.de/p/authorscontact.html).
 
@@ -130,7 +130,7 @@ If you update `ruleset`, make sure that you keep `{NULL, NULL, NULL}` at the end
 
 NELTool was currently used to perform experiments for the following scientific projects:
 
-- Testing how a new type of active warden, a so-called *dynamic warden*, performs in terms of combating NEL-capable covert channels. The publication appeared in the top-journal *Future Generation Computer Systems* (impact factor 4,6x), cf. (Mazurczyk et al., 2019).
+- **Invention of a Dynamic Warden**: Testing how a new type of active warden, a so-called *dynamic warden*, performs in terms of combating NEL-capable covert channels. The publication appeared in the A-journal *Future Generation Computer Systems* (FGCS, impact factor 4,6) as (Mazurczyk et al., 2019).
 
 If you used NELTool for your experiments, let me know and I am happy to link your research here.
 
