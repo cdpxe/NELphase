@@ -3,6 +3,7 @@ CHANGELOG for the NEL tool
 current:
  * slightly updated the markdown files (also pointed out the
    idea of the dynamic warden)
+ * performed some tiny improvements of the documentation
 
 v. 0.2.4:
  * Changed several details in terms of the packet counting and
