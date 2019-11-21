@@ -11,7 +11,7 @@ In *Network Steganography* research, a *covert channel* is a stealthy communicat
 
 For instance, certain network packets of the covert channel may be blocked by an active warden if they set reserved header bits to '1' (a typical filter rule of an active warden could simply clear the bit to prevent a covert channel).
 
-Although the NEL phase was originally discussed in academia round 2008/2009, no implementation was made available by any researchers. With NEL, we provide the first public implementation of a NEL phase on the basis of scapy and libpcap. NEL is written in C and runs best under Linux.
+Although the NEL phase was originally discussed in academia around 2008/2009, no implementation was made available by any researchers. With NEL, we provide the first public implementation of a NEL phase on the basis of scapy and libpcap. NEL is written in C and runs best under Linux.
 
 ## How the NEL Phase Works
 
