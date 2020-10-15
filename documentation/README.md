@@ -4,7 +4,15 @@ Written by *Steffen Wendzel*, [www.wendzel.de](http://www.wendzel.de) (wendzel (
 
 ## Introduction
 
-In *Network Steganography* research, a *covert channel* is a stealthy communication channel (see [this paper](https://cacm.acm.org/magazines/2018/1/223894/fulltext), [our short video](https://vimeo.com/245230404) (4min) or [our overview video](http://ih-patterns.blogspot.de/2018/04/talk-on-information-hiding-and-hiding.html) (31min) for an introduction or (Mazurczyk et al., 2016) for detailled fundamentals). Some covert channels are capable of performing a so-called [**Network Environment Learning** phase](https://www.researchgate.net/publication/229091999_The_Problem_of_Traffic_Normalization_Within_a_Covert_Channel%27s_Network_Environment_Learning_Phase?ev=srch_pub&_sg=yiWm%2Fl1DEUeQDayeMTW0oEMG5Uyxo4zfcmAAOkr6NkJtTx6g7xucnaWMAIFkzvlq_n6tx%2Fpj8MwJkZ%2FDhSCYZtVcY3G8XFjtuD0wGGY97liDms58KUp77JmWf%2F2uLjaFg_9rtZQe80mfDWVt%2BOxdHhJvIgvvSP8%2FJUpvi9Tx32b%2BASAG60z5JBglEJw%2Fx0RbUK) (or: NEL phase). Such NEL-capable covert channels
+In *Network Steganography* research, a *covert channel* is a stealthy communication channel. Need some introduction into the topic? Here is some material for you:
+
+* our [overview paper](https://cacm.acm.org/magazines/2018/1/223894/fulltext)
+* [our short video](https://vimeo.com/245230404) (4min)
+* [my overview video](http://ih-patterns.blogspot.de/2018/04/talk-on-information-hiding-and-hiding.html) (31min)
+* my [MOOC (*massive open online class*) on Network Covert Channels](https://github.com/cdpxe/Network-Covert-Channels-A-University-level-Course)
+* see (Mazurczyk et al., 2016) for detailled fundamentals
+
+Some covert channels are capable of performing a so-called [**Network Environment Learning** phase](https://www.researchgate.net/publication/229091999_The_Problem_of_Traffic_Normalization_Within_a_Covert_Channel%27s_Network_Environment_Learning_Phase?ev=srch_pub&_sg=yiWm%2Fl1DEUeQDayeMTW0oEMG5Uyxo4zfcmAAOkr6NkJtTx6g7xucnaWMAIFkzvlq_n6tx%2Fpj8MwJkZ%2FDhSCYZtVcY3G8XFjtuD0wGGY97liDms58KUp77JmWf%2F2uLjaFg_9rtZQe80mfDWVt%2BOxdHhJvIgvvSP8%2FJUpvi9Tx32b%2BASAG60z5JBglEJw%2Fx0RbUK) (or: NEL phase). Such NEL-capable covert channels
 
 - can determine how exactly data can be covertly exchanged between sender and receiver, and
 - which types stealthy data transmissions will be blocked/modified by an active warden (e.g. a firewall or a traffic normalizer).
@@ -165,3 +173,7 @@ For the NEL phase, another aspect of covert channels is also important. Covert c
 
 ## Websites
 - [Information Hiding Patterns Project](http://ih-patterns.blogspot.de/p/authorscontact.html)
+- [Massive Open Online Class on Network Information Hiding](https://github.com/cdpxe/Network-Covert-Channels-A-University-level-Course)
+- [Github repository with several network covert channels](https://github.com/cdpxe/NetworkCovertChannels)
+- [Open Covert Channel Detection System](https://github.com/cdpxe/nefias) (also Github)
+- [CCEAP](https://github.com/cdpxe/CCEAP) covert channels learning tool
