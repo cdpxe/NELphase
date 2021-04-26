@@ -1,6 +1,6 @@
 CHANGELOG for the NEL tool
 
-current:
+v. 0.2.5:
  * slightly updated the markdown files (also pointed out the
    idea of the dynamic warden)
  * performed some tiny improvements of the documentation
@@ -13,7 +13,7 @@ v. 0.2.4:
 
 v. 0.2.1-0.2.3:
  * Improved several aspects of the documentation
- * Added several new rules provided by Mehdi C.
+ * Added several new rules provided by Mehdi Chourib
 
 v. 0.2.0 : 2017-05-06
  * Initial public release (github)

@@ -41,7 +41,7 @@
 #include <math.h>
 #include <time.h>
 
-#define TOOL_VERSION		"0.2.4"
+#define TOOL_VERSION		"0.2.5"
 #define WELCOME_MESSAGE		"NEL: Implementation of a Network Environment Learning (NEL) Phase\n" \
 				"     for Network Covert Channel Research\n\n" \
 				"(C) 2017-2019 Steffen Wendzel (wendzel (at) hs-worms (dot) de), " \
@@ -83,4 +83,3 @@ void *cs_NEL_handler(void *);
 void *cr_NEL_handler(void *);
 void *cr_measure(void *);
 void usage(void);
-
