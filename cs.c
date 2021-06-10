@@ -283,7 +283,7 @@ void *cs_NEL_handler(void *sockfd_ptr)
 		sleep(1); /* wait one second before sending data (CR waits much
 			   * longer, so we will have no problem here). */
 		
-		/* send three packets of test traffic each time */
+		/* send NUM_NEL_TESTPKT_SND_PKTS_P_PROT packets of test traffic each time */
 		for (i = 0; i < NUM_NEL_TESTPKT_SND_PKTS_P_PROT /*XXX: NEL! */; i++)
 			send_CC_packet(buf.announced_proto);
 		
@@ -333,6 +333,8 @@ void *cs_COMM_sender(void *unused)
 			proto.announced_proto = i;			
 			if (P_nb[i] == 1) {
 				//printf("non-blocked protocol %i found\n", i);
+                /* We found a non-blocked protocol, now use this protocol to
+                 * send NUM_COMM_PHASE_SND_PKTS_P_PROT packets. */
 				int pkt_cnt = 0;
 				for (pkt_cnt = 0;
 				     pkt_cnt < NUM_COMM_PHASE_SND_PKTS_P_PROT /*XXX: COMM-P.! */;
