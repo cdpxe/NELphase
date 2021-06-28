@@ -75,7 +75,12 @@
  * how many packets to be sent per CC type during *NEL* phase */
 #define NUM_NEL_TESTPKT_SND_PKTS_P_PROT 5
 
-/* SIM_LIMIT_FOR_BLOCKED_SENDING -- NEW in v.0.2.6:
+#define WARDEN_MODE_NO_WARDEN   0x10
+#define WARDEN_MODE_REG_WARDEN  0x20
+#define WARDEN_MODE_DYN_WARDEN  0x40
+#define WARDEN_MODE_ADP_WARDEN  0x80
+#define WARDEN_MODE             WARDEN_MODE_REG_WARDEN
+/* WARDEN_MODE_REG_WARDEN -> SIM_LIMIT_FOR_BLOCKED_SENDING -- NEW in v.0.2.6:
  * Simulate a WARDEN already in this tool w/o relying on extra software.
  * Values:
  * 0=sender will send 0% (block 100%) of the probe packets;

@@ -283,19 +283,24 @@ void *cs_NEL_handler(void *sockfd_ptr)
 			   * longer, so we will have no problem here). */
 		
 		/* send NUM_NEL_TESTPKT_SND_PKTS_P_PROT packets of test traffic each time */
-		for (i = 0; i < NUM_NEL_TESTPKT_SND_PKTS_P_PROT /*XXX: NEL! */; i++)
-            /* NEW: simulate a simple regular warden that blocks a fraction of
-             * the protocols (default: deactivated) */
-            if (buf.announced_proto < SIM_LIMIT_FOR_BLOCKED_SENDING) {
-                send_CC_packet(buf.announced_proto);
-            } else {
-                /* This system() is just to consume an approx. equal amount of time
-                 *  as if we would ACTUALLY send the packet. */
-                if (system("echo 'exit;' | scapy >/dev/null 2>&1") != 0) {
-                    fprintf(stderr, "An error occured while calling 'scapy'.\n");
+		for (i = 0; i < NUM_NEL_TESTPKT_SND_PKTS_P_PROT /*XXX: NEL! */; i++) {
+            /* NEW (0.2.6): simulate a simple regular warden that blocks a fraction of the CCs */
+            if (MODE_WARDEN == WARDEN_MODE_REG_WARDEN || MODE_WARDEN == MODE_WARDEN_NO_WARDEN) {
+                /* In case of MODE_WARDEN_NO_WARDEN, SIM_LIMIT_FOR_BLOCKED_SENDING
+                 * must block none of the CCs! */
+                if (buf.announced_proto < SIM_LIMIT_FOR_BLOCKED_SENDING) {
+                    send_CC_packet(buf.announced_proto);
+                } else {
+                    /* This system() is just to consume an approx. equal amount of time
+                    *  as if we would ACTUALLY send the packet. */
+                    if (system("echo 'exit;' | scapy >/dev/null 2>&1") != 0) {
+                        fprintf(stderr, "An error occured while calling 'scapy'.\n");
+                    }
+                    fprintf(stderr, "internally blocked sending of protocol %u\n", buf.announced_proto);
                 }
-                fprintf(stderr, "internally blocked sending of protocol %u\n", buf.announced_proto);
             }
+        }
+        
 		/* after we sent the test packets for the selected hiding technique,
 		 * wait for the answer of the CR that informs us about the number of
 		 * packets it received of the particular CC hiding technique. */
@@ -339,8 +344,8 @@ void *cs_COMM_sender(void *unused)
 	while (pkts_sent < NUM_COMM_PHASE_PKTS) {
 		sent_during_current_loop = 0;
 		for (i = 0; i < ANNOUNCED_PROTO_NUMBERS; i++) {
-			proto.announced_proto = i;			
-			if (P_nb[i] == 1) {
+			proto.announced_proto = i;
+            if (P_nb[i] == 1) {
 				//printf("non-blocked protocol %i found\n", i);
                 /* We found a non-blocked protocol, now use this protocol to
                  * send NUM_COMM_PHASE_SND_PKTS_P_PROT packets. */
