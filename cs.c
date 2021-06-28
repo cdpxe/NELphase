@@ -27,7 +27,6 @@
  */
 
 #include "nel.h"
-#include "cs.h"
 
 /* This is a core component of NEL: each array element contains a rule name,
  * a scapy command and finally a PCAP filter for each covert channel technique
@@ -285,8 +284,16 @@ void *cs_NEL_handler(void *sockfd_ptr)
 		
 		/* send NUM_NEL_TESTPKT_SND_PKTS_P_PROT packets of test traffic each time */
 		for (i = 0; i < NUM_NEL_TESTPKT_SND_PKTS_P_PROT /*XXX: NEL! */; i++)
-			send_CC_packet(buf.announced_proto);
-		
+            /* NEW: simulate a simple regular warden that blocks a fraction of
+             * the protocols (default: deactivated) */
+            if (buf.announced_proto < SIM_LIMIT_FOR_BLOCKED_SENDING) {
+                send_CC_packet(buf.announced_proto);
+            } else {
+                /* This system() is just to consume an approx. equal amount of time
+                 *  as if we would ACTUALLY send the packet. */
+                system("echo 'exit;' | scapy >/dev/null 2>&1");
+                fprintf(stderr, "internally blocked sending of protocol %u\n", buf.announced_proto);
+            }
 		/* after we sent the test packets for the selected hiding technique,
 		 * wait for the answer of the CR that informs us about the number of
 		 * packets it received of the particular CC hiding technique. */

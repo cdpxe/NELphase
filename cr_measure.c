@@ -80,6 +80,7 @@ void pkt_handler_COM(u_char *user, const struct pcap_pkthdr *h,
 			 const u_char *bytes)
 {
 	recv_through_warden_pkt_cnt++;
+    fprintf(stderr, "received: %d packets\n", recv_through_warden_pkt_cnt);
 
 	if (recv_through_warden_pkt_cnt >= NUM_OVERALL_REQ_PKTS) {
 		fprintf(stderr, "MEASUREMENT COMPLETED; received %i CC "

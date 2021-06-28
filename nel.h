@@ -41,23 +41,29 @@
 #include <math.h>
 #include <time.h>
 
-#define TOOL_VERSION		"0.2.5"
+#define TOOL_VERSION		"0.2.6"
 #define WELCOME_MESSAGE		"NEL: Implementation of a Network Environment Learning (NEL) Phase\n" \
 				"     for Network Covert Channel Research\n\n" \
-				"(C) 2017-2019 Steffen Wendzel (wendzel (at) hs-worms (dot) de), " \
+				"(C) 2017-2021 Steffen Wendzel (wendzel (at) hs-worms (dot) de), " \
 				"Network Security Research Group (NSRG), " \
 				"Worms University of Applied Sciences, " \
-				"WWW: www.wendzel.de\n" \
+				"WWW: https://www.wendzel.de\n" \
 				"Version " TOOL_VERSION "\n\n"
 
 #define CR_NEL_TESTPKT_WAITING_TIME	5	/* Waiting time of NEL receiver for packets from Alice (in sec) */
-#define NUM_COMM_PHASE_PKTS		3000	/* number of COMM phase packets to send; should be enough to 
+#define NUM_COMM_PHASE_PKTS		20000	/* number of COMM phase packets to send; should be enough to 
 						 * succeed also under heavily-blocked circumstances */
-#define NUM_OVERALL_REQ_PKTS		200	/* number of CC packets (overall) that must go through warden
+#define NUM_OVERALL_REQ_PKTS		400	/* number of CC packets (overall) that must go through warden
 						 * before we count NEL as completed */
 #define NUM_COMM_PHASE_SND_PKTS_P_PROT	5	/* how many packets to send during the *COMM* phase per non-blocked
 						 * protocol in a row */
 #define NUM_NEL_TESTPKT_SND_PKTS_P_PROT 5	/* how many packets to be sent per CC type during *NEL* phase */
+
+/* NEW in v.0.2.6: simulate a WARDEN already in this tool w/o relying on extra software */
+#define SIM_LIMIT_FOR_BLOCKED_SENDING 3   /* 1=sender will send 0% of the probe packets;
+                                            * 3=sender will send 4% of the probe packets (i.e. 96% static regular warden);
+                                            * 25=sender will block 50% of the probe packets;
+                                            * 50=sender will send 100% of the probe protocols (DEFAULT) */
 
 
 #define MODE_UNSET		0x00

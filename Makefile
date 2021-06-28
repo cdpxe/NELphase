@@ -10,7 +10,7 @@ all:
 	$(CC) -O -o $(BINARY) $(CFILES) $(LIBS)
 
 e :
-	gedit $(SRCFILES) || pluma $(SRCFILES)
+	kate $(SRCFILES) || pluma $(SRCFILES)
 
 clean :
 	rm -vf *.o $(BINARY)
