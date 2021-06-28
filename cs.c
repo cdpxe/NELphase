@@ -404,8 +404,20 @@ void *cs_COMM_sender(void *unused)
 				for (pkt_cnt = 0;
 				     pkt_cnt < NUM_COMM_PHASE_SND_PKTS_P_PROT /*XXX: COMM-P.! */;
 				     pkt_cnt++) {
-				     	/* use this non-blocked protocol! */
-					send_CC_packet(proto.announced_proto);
+                    /* use this non-blocked protocol + try sending it! */
+                    if (WARDEN_MODE == WARDEN_MODE_NO_WARDEN) {
+                        send_CC_packet(proto.announced_proto);
+                    } else {
+                        if (WARDEN_MODE == WARDEN_MODE_REG_WARDEN) {
+                            if (proto.announced_proto < SIM_LIMIT_FOR_BLOCKED_SENDING) {
+                                send_CC_packet(proto.announced_proto);
+                            }
+                        } else if (WARDEN_MODE == WARDEN_MODE_DYN_WARDEN) {
+                                if (ruleset_activation[proto.announced_proto] == 0) {
+                                    send_CC_packet(proto.announced_proto);
+                                }
+                        }
+                    }
 				}
 				pkts_sent += NUM_COMM_PHASE_SND_PKTS_P_PROT;
 				sent_during_current_loop = 1;
