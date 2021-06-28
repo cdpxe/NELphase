@@ -34,4 +34,6 @@ receiverlocal :
 receiverremote :
 	./nel receiver 192.168.2.104 wlp2s0
 
+senderremote :
+	./nel sender 192.168.2.109 192.168.2.109
 
