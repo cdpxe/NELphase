@@ -80,15 +80,19 @@
 #define WARDEN_MODE_DYN_WARDEN  0x40
 #define WARDEN_MODE_ADP_WARDEN  0x80
 #define WARDEN_MODE             WARDEN_MODE_REG_WARDEN
-/* WARDEN_MODE_REG_WARDEN -> SIM_LIMIT_FOR_BLOCKED_SENDING -- NEW in v.0.2.6:
+/* WARDEN_MODE_REG/DYN/ADP_WARDEN -> SIM_LIMIT_FOR_BLOCKED_SENDING -- NEW in v.0.2.6:
  * Simulate a WARDEN already in this tool w/o relying on extra software.
  * Values:
  * 0=sender will send 0% (block 100%) of the probe packets;
- * 2=sender will send 4% (block 96%) of the probe packets (i.e. 96% static regular warden);
+ * 2=sender will send 4% (block 96%) of the probe packets;
  * 25=sender will send/block 50% of the probe packets;
  * 50=sender will send 100% of the probe protocols (DEFAULT) */
 #define SIM_LIMIT_FOR_BLOCKED_SENDING 3
-
+/* WARDEN_MODE_DYN -> RELOAD_INTERVAL:
+ * After how many seconds should we shuffle the active rules again?
+ * Note: This is not exact. It is always RELOAD_INTERVAL+small overhead.
+ */
+#define RELOAD_INTERVAL         5
 
 #define MODE_UNSET		0x00
 #define MODE_SENDER		0x01

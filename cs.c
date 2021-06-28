@@ -196,6 +196,7 @@ char *ruleset[ANNOUNCED_PROTO_NUMBERS+1][3] = {
 	/* update ANNOUNCED_PROTO_NUMBERS after adding new proto here! */
 	{NULL, NULL, NULL}
 };
+int ruleset_activation[ANNOUNCED_PROTO_NUMBERS+1];
 
 
 
@@ -264,7 +265,11 @@ void *cs_NEL_handler(void *sockfd_ptr)
 #ifdef INCREMENTAL_PROTO_SELECT
 	int p = 0;
 #endif
-	
+    time_t last_timestamp = 0; /* force shuffling on loop entry */
+    
+    /* deactivate all rules by default */
+    bzero(ruleset_activation, sizeof(ruleset_activation));
+    
 	while (1) {
 		bzero(&buf, sizeof(buf));
 #ifdef INCREMENTAL_PROTO_SELECT
@@ -299,7 +304,30 @@ void *cs_NEL_handler(void *sockfd_ptr)
                     fprintf(stderr, "internally blocked sending of protocol %u\n", buf.announced_proto);
                 }
             } else if (WARDEN_MODE == WARDEN_MODE_DYN_WARDEN) {
-                //TODO
+                /* check if time for shuffling activated rules is due */
+                if ((last_timestamp + RELOAD_INTERVAL) < time(NULL)) {
+                    int counter = 0;
+                    /* shuffle rules: first set all rules to zero (=deactivated) */
+                    bzero(ruleset_activation, sizeof(ruleset_activation));
+                    /* activate SIM_LIMIT_FOR_BLOCKED_SENDING protocols randomly */
+                    for (counter = 0; counter < SIM_LIMIT_FOR_BLOCKED_SENDING; counter++) {
+                        int rule = rand() % SIM_LIMIT_FOR_BLOCKED_SENDING;
+                        int set_counter = rule; /* start with counter and find next suitable slot */
+                        /* find the next free protocol to activate in case the current one is already activated */
+                        while (ruleset_activation[set_counter % SIM_LIMIT_FOR_BLOCKED_SENDING] == 1) {
+                            set_counter++;
+                        }
+                        ruleset_activation[set_counter] = 1;
+                    }
+                    printf("result of shuffling: [");
+                    for (counter = 0; counter < SIM_LIMIT_FOR_BLOCKED_SENDING; counter++)
+                        printf("%i,", ruleset_activation[counter]);
+                    printf("]\n");
+                }
+                /* send packet if protocol is NOT blocked */
+                if (ruleset_activation[buf.announced_proto] == 1) {
+                    send_CC_packet(buf.announced_proto);
+                }
             }
         }
         
