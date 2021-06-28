@@ -243,9 +243,10 @@ void send_CC_packet(u_int32_t announced_proto)
 	/* this call not secure; code should be only be used for research
 	 * purposes, not in any productive environment! */
 	if (system(buf) != 0) {
-		fprintf(stderr, "System command returned an error while "
-			"running '%s'. Please see scapy.log for details (maybe"
-			" the wrong scapy-cmd was provided?).\n", buf);
+		fprintf(stderr, "Fatal error: System command returned an error while "
+			"running '%s'. Please see scapy.log for details (maybe the wrong "
+            "scapy-cmd was provided?). Exiting.\n", buf);
+        exit(1);
 	}
 }
 
@@ -270,7 +271,23 @@ void *cs_NEL_handler(void *sockfd_ptr)
     /* deactivate all rules by default */
     bzero(ruleset_activation, sizeof(ruleset_activation));
     
-	while (1) {
+    printf("Configuration. MODE=");
+    switch (WARDEN_MODE) {
+        case WARDEN_MODE_NO_WARDEN:  printf("NO WARDEN\n");  break;
+        case WARDEN_MODE_REG_WARDEN: printf("REGULAR WARDEN, "); break;
+        case WARDEN_MODE_DYN_WARDEN: printf("DYNAMIC WARDEN, "); break;
+        default: fprintf(stderr, "invalid mode! exiting.\n"); exit(1);
+    }
+    if (WARDEN_MODE != WARDEN_MODE_NO_WARDEN) {
+        printf("simul. blocking limit=%i", SIM_LIMIT_FOR_BLOCKED_SENDING);
+        printf(" (%f%%)", (float) 100*(ANNOUNCED_PROTO_NUMBERS - SIM_LIMIT_FOR_BLOCKED_SENDING) / ANNOUNCED_PROTO_NUMBERS);
+        if (WARDEN_MODE != WARDEN_MODE_REG_WARDEN) {
+            printf(", reload interval=%i", RELOAD_INTERVAL);
+        }
+        putchar('\n');
+    }
+
+    while (1) {
 		bzero(&buf, sizeof(buf));
 #ifdef INCREMENTAL_PROTO_SELECT
 		buf.announced_proto = p++ % ANNOUNCED_PROTO_NUMBERS;
@@ -299,30 +316,32 @@ void *cs_NEL_handler(void *sockfd_ptr)
                     /* This system() is just to consume an approx. equal amount of time
                     *  as if we would ACTUALLY send the packet. */
                     if (system("echo 'exit;' | scapy >/dev/null 2>&1") != 0) {
-                        fprintf(stderr, "An error occured while calling 'scapy'.\n");
+                        fprintf(stderr, "Fatal: An error occured while calling 'scapy'.\n");
+                        exit(1);
                     }
                     fprintf(stderr, "internally blocked sending of protocol %u\n", buf.announced_proto);
                 }
             } else if (WARDEN_MODE == WARDEN_MODE_DYN_WARDEN) {
                 /* check if time for shuffling activated rules is due */
                 if ((last_timestamp + RELOAD_INTERVAL) < time(NULL)) {
+                    last_timestamp = time(NULL);
                     int counter = 0;
                     /* shuffle rules: first set all rules to zero (=deactivated) */
                     bzero(ruleset_activation, sizeof(ruleset_activation));
-                    /* activate SIM_LIMIT_FOR_BLOCKED_SENDING protocols randomly */
-                    for (counter = 0; counter < SIM_LIMIT_FOR_BLOCKED_SENDING; counter++) {
-                        int rule = rand() % SIM_LIMIT_FOR_BLOCKED_SENDING;
-                        int set_counter = rule; /* start with counter and find next suitable slot */
+                    /* activate 50- SIM_LIMIT_FOR_BLOCKED_SENDING protocols randomly */
+                    for (counter = 0; counter < (ANNOUNCED_PROTO_NUMBERS - SIM_LIMIT_FOR_BLOCKED_SENDING); counter++) {
+                        int rule = rand() % ANNOUNCED_PROTO_NUMBERS;
+                        /* find next suitable slot */
                         /* find the next free protocol to activate in case the current one is already activated */
-                        while (ruleset_activation[set_counter % SIM_LIMIT_FOR_BLOCKED_SENDING] == 1) {
-                            set_counter++;
+                        while (ruleset_activation[rule % ANNOUNCED_PROTO_NUMBERS] == 1) {
+                            rule++;
                         }
-                        ruleset_activation[set_counter] = 1;
+                        ruleset_activation[rule % ANNOUNCED_PROTO_NUMBERS] = 1;
                     }
-                    printf("result of shuffling: [");
-                    for (counter = 0; counter < SIM_LIMIT_FOR_BLOCKED_SENDING; counter++)
+                    printf("activated rules: {");
+                    for (counter = 0; counter < ANNOUNCED_PROTO_NUMBERS; counter++)
                         printf("%i,", ruleset_activation[counter]);
-                    printf("]\n");
+                    printf("}\n");
                 }
                 /* send packet if protocol is NOT blocked */
                 if (ruleset_activation[buf.announced_proto] == 1) {
