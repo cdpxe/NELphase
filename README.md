@@ -8,7 +8,7 @@ Although the NEL phase was originally discussed in academia about ten years ago,
 
 **Requirements:**
 
-- installed `scapy`
+- Scapy must be installed
 - gcc and make
 - pcap library, incl. libpcap-dev, must be installed
 - pthreads library
