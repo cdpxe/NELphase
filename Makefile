@@ -21,3 +21,17 @@ count :
 tgz :
 	tar -czvf nel.tgz *.c *.h Makefile
 
+
+#### debug/development stuff below
+
+senderlocal :
+	./nel sender 127.0.0.1 127.0.0.1
+
+receiverlocal :
+	./nel receiver 127.0.0.1 lo
+
+
+receiverremote :
+	./nel receiver 192.168.2.104 wlp2s0
+
+
