@@ -43,7 +43,7 @@
 
 /*#define DEBUGMODE*/
 
-#define TOOL_VERSION		"0.2.6"
+#define TOOL_VERSION		"0.3.0"
 #define WELCOME_MESSAGE		"NEL: Implementation of a Network Environment Learning (NEL) Phase\n" \
 				"     for Network Covert Channel Research\n\n" \
 				"(C) 2017-2021 Steffen Wendzel (wendzel (at) hs-worms (dot) de), " \
