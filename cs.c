@@ -291,7 +291,9 @@ void *cs_NEL_handler(void *sockfd_ptr)
             } else {
                 /* This system() is just to consume an approx. equal amount of time
                  *  as if we would ACTUALLY send the packet. */
-                system("echo 'exit;' | scapy >/dev/null 2>&1");
+                if (system("echo 'exit;' | scapy >/dev/null 2>&1") != 0) {
+                    fprintf(stderr, "An error occured while calling 'scapy'.\n");
+                }
                 fprintf(stderr, "internally blocked sending of protocol %u\n", buf.announced_proto);
             }
 		/* after we sent the test packets for the selected hiding technique,
