@@ -346,6 +346,8 @@ void *cs_NEL_handler(void *sockfd_ptr)
                 /* send packet if protocol is NOT blocked */
                 if (ruleset_activation[buf.announced_proto] == 0) {
                     send_CC_packet(buf.announced_proto);
+                } else {
+                    fprintf(stderr, "internally blocked sending of protocol %u\n", buf.announced_proto);
                 }
             }
         }
