@@ -6,6 +6,13 @@ For instance, a typical covert channel technique is to embed secret data in rese
 
 Although the NEL phase was originally discussed in academia about ten years ago, *no implementation was made available by other researchers*. With *NEL*, **we provide the first public implementation of a NEL phase** on the basis of *scapy* and *libpcap*. NEL is written in C and runs best under Linux.
 
+**Requirements:**
+
+- installed `scapy`
+- gcc and make
+- pcap library, incl. libpcap-dev, must be installed
+- pthreads library
+
 **Documentation:** Please have a look at the *[documentation](https://github.com/cdpxe/NELphase/blob/master/documentation/README.md)*.
 
 **My open online class on Network Covert Channels:** available [here](https://github.com/cdpxe/Network-Covert-Channels-A-University-level-Course).
