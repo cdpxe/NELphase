@@ -62,12 +62,12 @@
 /* NUM_COMM_PHASE_PKTS:
  * number of COMM phase packets to send; should be enough to
  * succeed also under heavily-blocked circumstances */
-#define NUM_COMM_PHASE_PKTS		100000
+#define NUM_COMM_PHASE_PKTS		100
 
 /* NUM_OVERALL_REQ_PKTS:
  * number of CC packets (overall) that must go through warden
  * before we count NEL as completed */
-#define NUM_OVERALL_REQ_PKTS		100
+#define NUM_OVERALL_REQ_PKTS		100000
 
 /* NUM_COMM_PHASE_SND_PKTS_P_PROT:
  * how many packets to send during the *COMM* phase per
