@@ -59,7 +59,7 @@
 /* NUM_COMM_PHASE_PKTS:
  * number of COMM phase packets to send; should be enough to
  * succeed also under heavily-blocked circumstances */
-#define NUM_COMM_PHASE_PKTS		20000
+#define NUM_COMM_PHASE_PKTS		100000
 
 /* NUM_OVERALL_REQ_PKTS:
  * number of CC packets (overall) that must go through warden

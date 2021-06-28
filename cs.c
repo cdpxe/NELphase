@@ -432,7 +432,7 @@ void *cs_COMM_sender(void *unused)
 			sleep(1);
 	}
 
-	fprintf(stderr, "\n===== COMMUNICATION PHASE COMPLETED =====\n");
+	fprintf(stderr, "\n===== COMMUNICATION PHASE COMPLETED (or reached limit of packets to send -- NUM_COMM_PHASE_PKTS) =====\n");
 	fprintf(stderr, "exiting.\n");
 	exit(0);
 	/* NOTREACHED */
