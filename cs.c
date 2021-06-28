@@ -285,8 +285,8 @@ void *cs_NEL_handler(void *sockfd_ptr)
 		/* send NUM_NEL_TESTPKT_SND_PKTS_P_PROT packets of test traffic each time */
 		for (i = 0; i < NUM_NEL_TESTPKT_SND_PKTS_P_PROT /*XXX: NEL! */; i++) {
             /* NEW (0.2.6): simulate a simple regular warden that blocks a fraction of the CCs */
-            if (MODE_WARDEN == WARDEN_MODE_REG_WARDEN || MODE_WARDEN == MODE_WARDEN_NO_WARDEN) {
-                /* In case of MODE_WARDEN_NO_WARDEN, SIM_LIMIT_FOR_BLOCKED_SENDING
+            if (WARDEN_MODE == WARDEN_MODE_REG_WARDEN || WARDEN_MODE == WARDEN_MODE_NO_WARDEN) {
+                /* In case of WARDEN_MODE_NO_WARDEN, SIM_LIMIT_FOR_BLOCKED_SENDING
                  * must block none of the CCs! */
                 if (buf.announced_proto < SIM_LIMIT_FOR_BLOCKED_SENDING) {
                     send_CC_packet(buf.announced_proto);
@@ -298,6 +298,8 @@ void *cs_NEL_handler(void *sockfd_ptr)
                     }
                     fprintf(stderr, "internally blocked sending of protocol %u\n", buf.announced_proto);
                 }
+            } else if (WARDEN_MODE == WARDEN_MODE_DYN_WARDEN) {
+                //TODO
             }
         }
         
