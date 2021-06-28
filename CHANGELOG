@@ -1,10 +1,11 @@
 CHANGELOG for the NEL tool
 
-v. current (0.2.6) (2021-June-28):
+v. current (0.3.0) (2021-June-28):
  * Add an option to simulate a regular warden by defining a
    fraction of CCs that are blocked (by simply preventing
    their probe packets being sent. Made sure time consumption
    is similar to regular sending.
+ * Add option to simulate a regular warden.
  * Remove unnecessary cs.h
 
 v. 0.2.5:
