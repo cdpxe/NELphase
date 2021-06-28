@@ -43,7 +43,7 @@
 
 /*#define DEBUGMODE*/
 
-#define TOOL_VERSION		"0.3.0"
+#define TOOL_VERSION		"0.4.0"
 #define WELCOME_MESSAGE		"NEL: Implementation of a Network Environment Learning (NEL) Phase\n" \
 				"     for Network Covert Channel Research\n\n" \
 				"(C) 2017-2021 Steffen Wendzel (wendzel (at) hs-worms (dot) de), " \
@@ -51,6 +51,9 @@
 				"Worms University of Applied Sciences, " \
 				"WWW: https://www.wendzel.de\n" \
 				"Version " TOOL_VERSION "\n\n"
+
+/* How many CCs do we know? */
+#define ANNOUNCED_PROTO_NUMBERS		50
 
 /* CR_NEL_TESTPKT_WAITING_TIME:
  * Waiting time of NEL receiver for packets from Alice (in sec) */
@@ -64,7 +67,7 @@
 /* NUM_OVERALL_REQ_PKTS:
  * number of CC packets (overall) that must go through warden
  * before we count NEL as completed */
-#define NUM_OVERALL_REQ_PKTS		400
+#define NUM_OVERALL_REQ_PKTS		100
 
 /* NUM_COMM_PHASE_SND_PKTS_P_PROT:
  * how many packets to send during the *COMM* phase per
@@ -78,8 +81,8 @@
 #define WARDEN_MODE_NO_WARDEN   0x10
 #define WARDEN_MODE_REG_WARDEN  0x20
 #define WARDEN_MODE_DYN_WARDEN  0x40
-#define WARDEN_MODE_ADP_WARDEN  0x80
-#define WARDEN_MODE             WARDEN_MODE_DYN_WARDEN
+#define WARDEN_MODE_ADP_WARDEN  0x80 /* *SIMPLIFIED* Adaptive Warden(!) */
+#define WARDEN_MODE             WARDEN_MODE_NO_WARDEN
 /* WARDEN_MODE_REG/DYN/ADP_WARDEN -> SIM_LIMIT_FOR_BLOCKED_SENDING -- NEW in v.0.2.6:
  * Simulate a WARDEN already in this tool w/o relying on extra software.
  * Values:
@@ -87,18 +90,38 @@
  * 2=sender will send 4% (block 96%) of the probe packets;
  * 25=sender will send/block 50% of the probe packets;
  * 50=sender will send 100% of the probe protocols (DEFAULT) */
-#define SIM_LIMIT_FOR_BLOCKED_SENDING 2
-/* WARDEN_MODE_DYN -> RELOAD_INTERVAL:
+#define SIM_LIMIT_FOR_BLOCKED_SENDING 50
+/* WARDEN_MODE_ADP -> SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE:
+ * How many of the recently triggered inactive rules are activated
+ * during the next run?
+ * 0=No rules will be moved (essentially this means: deactivation of feature!)
+ * 2=the 2 latest triggered rules would be moved
+ * 50=All rules will be moved (i.e. warden only based on observations of triggers!)
+ */
+#define SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE  2
+/* WARDEN_MODE_DYN/ADP -> RELOAD_INTERVAL:
  * After how many seconds should we shuffle the active rules again?
  * Note: This is not exact. It is always RELOAD_INTERVAL+small overhead.
  */
 #define RELOAD_INTERVAL         5
 
+/* Some tests go here */
+#if (WARDEN_MODE == WARDEN_MODE_NO_WARDEN) && (SIM_LIMIT_FOR_BLOCKED_SENDING != 50)
+    #error SIM_LIMIT_FOR_BLOCKED_SENDING must be set to 0 if in NO-warden mode!
+#endif
+
+#if (WARDEN_MODE == WARDEN_MODE_DYN_WARDEN) && (ANNOUNCED_PROTO_NUMBERS - SIM_LIMIT_FOR_BLOCKED_SENDING) < 1
+    #error Please check source code for error 0x377: too many blocked rules!
+#endif
+
+#if (WARDEN_MODE == WARDEN_MODE_ADP_WARDEN) && (ANNOUNCED_PROTO_NUMBERS - SIM_LIMIT_FOR_BLOCKED_SENDING - SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE) < 1
+    #error Please check source code for error 0x378: too many inactive + blocked rules in combination.
+#endif
+
+/* remaining basic definitions */
 #define MODE_UNSET		0x00
 #define MODE_SENDER		0x01
 #define MODE_RECEIVER	0x02
-
-#define ANNOUNCED_PROTO_NUMBERS		50
 
 /* INCREMENTAL_PROTO_SELECT:
  * This macro (if uncommented) ensures that protocols are selected in an incremental
@@ -119,3 +142,5 @@ void *cs_NEL_handler(void *);
 void *cr_NEL_handler(void *);
 void *cr_measure(void *);
 void usage(void);
+void pretend_sending(u_int32_t);
+
