@@ -138,7 +138,8 @@ If you update `ruleset`, make sure that you keep `{NULL, NULL, NULL}` at the end
 
 NELTool was currently used to perform experiments for the following scientific projects:
 
-- **Invention of a Dynamic Warden**: Testing how a new type of active warden, a so-called *dynamic warden*, performs in terms of combating NEL-capable covert channels. The publication appeared in the A-journal *Future Generation Computer Systems* (FGCS, impact factor 4,6) as (Mazurczyk et al., 2019).
+- **Verification of Experiments of the Adaptive Warden**: The adaptive warden implemented in (Chourib et al., 2021) used the NEL code for verifying plausibility of experimental results.
+- **Invention of a Dynamic Warden**: Testing how a new type of active warden, a so-called *dynamic warden*, performs in terms of combating NEL-capable covert channels. The publication appeared in the journal *Future Generation Computer Systems* (FGCS) as (Mazurczyk et al., 2019).
 
 If you used NELTool for your experiments, let me know and I am happy to link your research here.
 
@@ -152,7 +153,13 @@ Several hiding methods are known that allow the realization of covert channels o
 
 For the NEL phase, another aspect of covert channels is also important. Covert channels can transfer internal protocols, called *control protocols* or *micro protocols* that allow the exchange of structured information in a header, see (Wendzel and Keller, 2011), (Kaur et al., 2016) and (Mazurczyk et al., 2016; Chapter 4). Announcements for test traffic as well as acknowledgements (both over the feedback channel) are realized with a simple control protocol. More advanced control protocols enable TCP-like reliability or even dynamic overlay routing.
 
+# Wardens Simulation
+
+By default, the NEL tool simulates no warden. However, it can simulate a regular warden (static ruleset), a dynamic warden (see Mazurczyk et al., 2019) as well as a simplified version of the adaptive warden (Chourib et al., 2021). The warden behavior can be turned on in 'nel.h'.
+
 # References
+
+- M. Chourib, S. Wendzel, W. Mazurczyk: Adaptive Warden Strategy for Countering Network Covert Storage Channels, in Proc. 36th Conference on Local Computer Networks (LCN), IEEE, 2021 (in press).
 
 - W. Mazurczyk, S. Wendzel, M. Chourib, J. Keller: [Countering Adaptive Network Covert Communication with Dynamic Wardens](https://www.sciencedirect.com/science/article/pii/S0167739X18316133), Future Generation Computer Systems (FGCS), Vol. 94, pp. 712-725, Elsevier, 2019.
 
