@@ -344,7 +344,7 @@ void *cs_NEL_handler(void *sockfd_ptr)
                     printf("}\n");
                 }
                 /* send packet if protocol is NOT blocked */
-                if (ruleset_activation[buf.announced_proto] == 1) {
+                if (ruleset_activation[buf.announced_proto] == 0) {
                     send_CC_packet(buf.announced_proto);
                 }
             }
