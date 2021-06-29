@@ -82,7 +82,7 @@
 #define WARDEN_MODE_REG_WARDEN  0x20
 #define WARDEN_MODE_DYN_WARDEN  0x40
 #define WARDEN_MODE_ADP_WARDEN  0x80 /* *SIMPLIFIED* Adaptive Warden(!) */
-#define WARDEN_MODE             WARDEN_MODE_NO_WARDEN
+#define WARDEN_MODE             WARDEN_MODE_REG_WARDEN
 /* WARDEN_MODE_REG/DYN/ADP_WARDEN -> SIM_LIMIT_FOR_BLOCKED_SENDING -- NEW in v.0.2.6:
  * Simulate a WARDEN already in this tool w/o relying on extra software.
  * Values:
@@ -90,7 +90,12 @@
  * 2=sender will send 4% (block 96%) of the probe packets;
  * 25=sender will send/block 50% of the probe packets;
  * 50=sender will send 100% of the probe protocols (DEFAULT) */
-#define SIM_LIMIT_FOR_BLOCKED_SENDING 50
+#define SIM_LIMIT_FOR_BLOCKED_SENDING 4
+/* WARDEN_MODE_DYN/ADP -> RELOAD_INTERVAL:
+ * After how many seconds should we shuffle the active rules again?
+ * Note: This is not exact. It is always RELOAD_INTERVAL+small overhead.
+ */
+#define RELOAD_INTERVAL         10
 /* WARDEN_MODE_ADP -> SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE:
  * How many of the recently triggered inactive rules are activated
  * during the next run?
@@ -98,12 +103,7 @@
  * 2=the 2 latest triggered rules would be moved
  * 50=All rules will be moved (i.e. warden only based on observations of triggers!)
  */
-#define SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE  2
-/* WARDEN_MODE_DYN/ADP -> RELOAD_INTERVAL:
- * After how many seconds should we shuffle the active rules again?
- * Note: This is not exact. It is always RELOAD_INTERVAL+small overhead.
- */
-#define RELOAD_INTERVAL         5
+#define SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE  5
 
 /* Some tests go here */
 #if (WARDEN_MODE == WARDEN_MODE_NO_WARDEN) && (SIM_LIMIT_FOR_BLOCKED_SENDING != 50)

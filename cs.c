@@ -258,7 +258,7 @@ void pretend_sending(u_int32_t protonum)
        fprintf(stderr, "Fatal: An error occured while calling 'scapy'.\n");
        exit(1);
     }
-    fprintf(stderr, "internally blocked sending of protocol %u\n", protonum);
+    fprintf(stderr, "warden: internally blocked sending of protocol %u\n", protonum);
 }
 
 /*************************
@@ -280,7 +280,8 @@ void *cs_NEL_handler(void *sockfd_ptr)
     
     /* deactivate all rules by default */
     bzero(ruleset_activation, sizeof(ruleset_activation));
-    bzero(ruleset_checked, sizeof(ruleset_checked));
+    for (i = 0; i < ANNOUNCED_PROTO_NUMBERS; i++)
+        ruleset_checked[i] = time(NULL);
     
     printf("Configuration. MODE=");
     switch (WARDEN_MODE) {
@@ -356,11 +357,12 @@ void *cs_NEL_handler(void *sockfd_ptr)
                         case WARDEN_MODE_ADP_WARDEN:
                             /* take the SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE latest triggered (checked) inactive rules into
                              * the active ruleset (and reset them to zero) */
+                            printf("Activated the following previously triggered inactive rules: ");
                             for (inactive2active = 0; inactive2active < SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE; inactive2active++) {
                                 time_t max_time = 0;
                                 int max_node = 0;
                                 /* find max value (most recent trigger) */
-                                for (counter = 0; counter < ANNOUNCED_PROTO_NUMBERS; counter++) {
+                                for (counter = inactive2active; counter < ANNOUNCED_PROTO_NUMBERS; counter++) {
                                     if (max_time < ruleset_checked[counter]) {
                                         max_time = ruleset_checked[counter];
                                         max_node = counter;
@@ -369,10 +371,15 @@ void *cs_NEL_handler(void *sockfd_ptr)
                                 /* active rule with max value; has a negliable race condition as COM phase could just
                                  * re-set the same rule again, but this is very unlikely and would influence the
                                  * measurements very, very slightly, if at all. */
-                                ruleset_activation[counter] = 1;
+                                ruleset_activation[max_node] = 1;
                                 // set the rule's value to zero so that the rule must first be triggered again before being used
-                                ruleset_checked[counter] = 0;
+                                ruleset_checked[max_node] = 0;
+                                printf("%i, ", max_node);
                             }
+                    printf("result: {");
+                    for (counter = 0; counter < ANNOUNCED_PROTO_NUMBERS; counter++)
+                        printf("%i,", ruleset_activation[counter]);
+                    printf("}\n");
                             /* activate the remaining 50-SIM_LIMIT_FOR_BLOCKED_SENDING-SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE
                              * protocols randomly */
                             for (counter = 0;
@@ -446,7 +453,7 @@ void *cs_COMM_sender(void *unused)
 	/* iterate through P_bn to send NUM_COMM_PHASE_PKTS packets,
 	 * only use available protocols marked as non-blocked in P_nb
 	 */
-	while (pkts_sent < NUM_COMM_PHASE_PKTS) {
+	while (pkts_sent < NUM_COMM_PHASE_PKTS*100 /* FIXME */) {
 		sent_during_current_loop = 0;
 		for (i = 0; i < ANNOUNCED_PROTO_NUMBERS; i++) {
 			proto.announced_proto = i;
