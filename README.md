@@ -21,4 +21,4 @@ Although the NEL phase was originally discussed in academia about ten years ago,
 
 **Other Covert Channel Tools:** See my repository on [network covert channel tools](https://github.com/cdpxe/NetworkCovertChannels).
 
-**Feedback:** Please send requests and feedback to the author ([Steffen Wendzel](http://www.wendzel.de)) (`wendzel (at) hs-worms (dot) de`).
+**Feedback:** Please send requests and feedback to the author ([Steffen Wendzel](https://www.wendzel.de)) (`wendzel (at) hs-worms (dot) de`).
