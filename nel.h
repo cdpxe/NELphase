@@ -80,8 +80,8 @@
 #define NUM_NEL_TESTPKT_SND_PKTS_P_PROT 5
 
 #define WARDEN_MODE_NO_WARDEN           0x10
-#define WARDEN_MODE_REG_WARDEN          0x20
-#define WARDEN_MODE_DYN_WARDEN          0x40
+#define WARDEN_MODE_REG_WARDEN          0x20 /* regular warden */
+#define WARDEN_MODE_DYN_WARDEN          0x40 /* dynamic warden (Mazurczyk et al.) */
 #define WARDEN_MODE_ADP_WARDEN          0x80 /* *SIMPLIFIED* Adaptive Warden(!) */
 #define WARDEN_MODE                     WARDEN_MODE_ADP_WARDEN
 
