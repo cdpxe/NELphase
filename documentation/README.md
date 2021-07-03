@@ -1,6 +1,6 @@
 # NEL – A Tool to Simulate a Network Environment Learning Phase in Network Steganography
 
-Written by *Steffen Wendzel*, [www.wendzel.de](http://www.wendzel.de) (wendzel (at) hs-worms (dot) de). Research on the NEL phase is currently performed by multiple authors, cf. [our project website](http://ih-patterns.blogspot.de/p/authorscontact.html).
+Written by *Steffen Wendzel*, [www.wendzel.de](https://www.wendzel.de) (wendzel (at) hs-worms (dot) de). Research on the NEL phase is currently performed by multiple authors, cf. [our project website](https://ih-patterns.blogspot.de/p/authorscontact.html).
 
 ## Introduction
 
@@ -12,24 +12,24 @@ In *Network Steganography* research, a *covert channel* is a stealthy communicat
 * my [MOOC (*massive open online class*) on Network Covert Channels](https://github.com/cdpxe/Network-Covert-Channels-A-University-level-Course)
 * see (Mazurczyk et al., 2016) for detailled fundamentals
 
-Some covert channels are capable of performing a so-called [**Network Environment Learning** phase](https://www.researchgate.net/publication/229091999_The_Problem_of_Traffic_Normalization_Within_a_Covert_Channel%27s_Network_Environment_Learning_Phase?ev=srch_pub&_sg=yiWm%2Fl1DEUeQDayeMTW0oEMG5Uyxo4zfcmAAOkr6NkJtTx6g7xucnaWMAIFkzvlq_n6tx%2Fpj8MwJkZ%2FDhSCYZtVcY3G8XFjtuD0wGGY97liDms58KUp77JmWf%2F2uLjaFg_9rtZQe80mfDWVt%2BOxdHhJvIgvvSP8%2FJUpvi9Tx32b%2BASAG60z5JBglEJw%2Fx0RbUK) (or: NEL phase). Such NEL-capable covert channels
+Some covert channels are capable of performing a so-called [**Network Environment Learning** phase](https://www.researchgate.net/publication/229091999_The_Problem_of_Traffic_Normalization_Within_a_Covert_Channel%27s_Network_Environment_Learning_Phase?ev=srch_pub&_sg=yiWm%2Fl1DEUeQDayeMTW0oEMG5Uyxo4zfcmAAOkr6NkJtTx6g7xucnaWMAIFkzvlq_n6tx%2Fpj8MwJkZ%2FDhSCYZtVcY3G8XFjtuD0wGGY97liDms58KUp77JmWf%2F2uLjaFg_9rtZQe80mfDWVt%2BOxdHhJvIgvvSP8%2FJUpvi9Tx32b%2BASAG60z5JBglEJw%2Fx0RbUK) (or: NEL phase). Such NEL-capable covert channels ...
 
 - can determine how exactly data can be covertly exchanged between sender and receiver, and
 - which types stealthy data transmissions will be blocked/modified by an active warden (e.g. a firewall or a traffic normalizer).
 
 For instance, certain network packets of the covert channel may be blocked by an active warden if they set reserved header bits to '1' (a typical filter rule of an active warden could simply clear the bit to prevent a covert channel).
 
-Although the NEL phase was originally discussed in academia around 2008/2009, no implementation was made available by any researchers. With NEL, we provide the first public implementation of a NEL phase on the basis of scapy and libpcap. NEL is written in C and runs best under Linux.
+Although the NEL phase was originally discussed in academia around 2008/2009, no implementation was made available by any researchers. With NEL, we provide the first public implementation of an improved NEL phase as described by (Wendzel, 2012) on the basis of scapy and libpcap. NEL is written in C and runs best under Linux.
 
 ## How the NEL Phase Works
 
-Regarding (Yarochkin et al., 2008), adaptive covert channels perform two different phases. In the so-called *Network Environment Learning* phase (NEL phase), peers (e.g. a covert sender and a receiver) try to determine which protocols can be used to communicate covertly and which protocols are blocked (and thus cannot be used for the covert communication). This is done by sending test traffic from one peer to the other. After the NEL phase found suitable non-blocked protocols, the *Communication* phase starts, in which actual covert traffic is exchanged. However, the NEL phase is continuously performed to update the list of non-blocked protocols from time to time. This approach was later extended by (Wendzel and Keller, 2011) and (Wendzel, 2012), i.e. the NEL phase was made more fine-grained and more robust.
+Regarding (Yarochkin et al., 2008), adaptive covert channels perform two different phases. In the so-called *Network Environment Learning* phase (NEL phase), peers (e.g. a covert sender and a receiver) try to determine which protocols can be used to communicate covertly and which protocols are blocked (and thus cannot be used for the covert communication). This is done by sending test traffic from one peer to the other. After the NEL phase found suitable non-blocked protocols, the *Communication* phase starts, in which actual covert traffic is exchanged. However, the NEL phase is continuously performed to update the list of non-blocked protocols from time to time. This approach was later extended by (Wendzel and Keller, 2011) and especially (Wendzel, 2012), i.e. the NEL phase was made more fine-grained and more robust. Our tool implements the sophisticated NEL phase of (Wendzel, 2021), i.e. a NEL phase with a feedback channel.
 
-A countermeasure, such as a traffic normalizer, would then try to block the covert traffic of the NEL and Communication phases. However, the NEL phase can be improved so that it can be performed even in the presence of a traffic normalizer (or other forms of *active wardens*), see (Wendzel, 2012) for details. NEL-capable covert channels can be currently only efficiently combated by so-called *dynamic wardens* that modify their own filter behavior in a constant manner, cf. (Mazurczyk et al., 2019).
+A countermeasure, such as a traffic normalizer, would then try to block the covert traffic of the NEL and Communication phases. However, the NEL phase can be improved so that it can be performed even in the presence of a traffic normalizer (or other forms of *active wardens*), see (Wendzel, 2012) for details. NEL-capable covert channels can be currently only efficiently combated by so-called *dynamic wardens* (and their derivate, the *adaptive wardens*) that modify their own filter behavior in a constant manner, cf. (Mazurczyk et al., 2019) and (Chourib et al., 2021).
 
 ## How the NEL Tool Works
 
-The NEL tool implements a sophisticated NEL phase as described in (Wendzel, 2012). In this scenario, *Alice* (NEL sender) and *Bob* (NEL receiver) are separated by an active warden (e.g. a traffic normalizer). The active warden blocks covert traffic between the two. If Alice sends a covert channel test packet to Bob, he may receives it but his reply to Alice could be blocked. To solve this problem, (Wendzel, 2012) proposes to utilize a third (but temporary, e.g. less secure) participant (or more general: temporary/less secure non-blocked channel) between Alice and Bob (in the figure below called the `Feedback Channel`) to exchange information that
+The NEL tool implements a sophisticated NEL phase as described in (Wendzel, 2012). In this scenario, *Alice* (NEL sender) and *Bob* (NEL receiver) are separated by an active warden (e.g. a traffic normalizer). The active warden blocks covert traffic between the two. If Alice sends a covert channel test packet to Bob, he may receives it but his reply to Alice could be blocked. To solve this problem, (Wendzel, 2012) proposes to utilize a third (but temporary, e.g. less secure) participant (or more general: temporary/less secure non-blocked channel) between Alice and Bob (in the figure below called the **Feedback Channel**) to exchange information that
 
 - announce test traffic and
 - provide feedback (i.e. Bob tells Alice whether test traffic was received, or not).
@@ -134,6 +134,20 @@ char *ruleset[ANNOUNCED_PROTO_NUMBERS+1][3] = {
 ```
 If you update `ruleset`, make sure that you keep `{NULL, NULL, NULL}` at the end.
 
+# Active Wardens Simulation
+
+By default, the NEL tool simulates no warden. However, it can simulate a regular warden (static ruleset), a dynamic warden (see Mazurczyk et al., 2019) as well as a simplified version of the adaptive warden (see Chourib et al., 2021). The warden behavior can be turned on in `nel.h`. In the file, one can also configure warden-specific behavior, such as
+
+- the fraction of filtered packets for regular wardens;
+- the reload interval (corresponds to the reload frequency) for dynamic and adaptive wardens;
+- the size of the inactive-checked rules that are moved to the active rules during the next time-slot (only adaptive warden).
+
+To active one of the wardens, simply use one of the specified macros for `WARDEN_MODE` in `nel.h`. For example, the following line turns on the *adaptive* warden:
+
+```
+#define WARDEN_MODE WARDEN_MODE_ADP_WARDEN
+```
+
 # Scientific Work Using NELTool
 
 NELTool was currently used to perform experiments for the following scientific projects:
@@ -153,9 +167,6 @@ Several hiding methods are known that allow the realization of covert channels o
 
 For the NEL phase, another aspect of covert channels is also important. Covert channels can transfer internal protocols, called *control protocols* or *micro protocols* that allow the exchange of structured information in a header, see (Wendzel and Keller, 2011), (Kaur et al., 2016) and (Mazurczyk et al., 2016; Chapter 4). Announcements for test traffic as well as acknowledgements (both over the feedback channel) are realized with a simple control protocol. More advanced control protocols enable TCP-like reliability or even dynamic overlay routing.
 
-# Wardens Simulation
-
-By default, the NEL tool simulates no warden. However, it can simulate a regular warden (static ruleset), a dynamic warden (see Mazurczyk et al., 2019) as well as a simplified version of the adaptive warden (Chourib et al., 2021). The warden behavior can be turned on in 'nel.h'.
 
 # References
 
