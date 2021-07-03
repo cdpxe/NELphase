@@ -83,7 +83,7 @@
 #define WARDEN_MODE_REG_WARDEN          0x20 /* regular warden */
 #define WARDEN_MODE_DYN_WARDEN          0x40 /* dynamic warden (Mazurczyk et al.) */
 #define WARDEN_MODE_ADP_WARDEN          0x80 /* *SIMPLIFIED* Adaptive Warden(!) */
-#define WARDEN_MODE                     WARDEN_MODE_ADP_WARDEN
+#define WARDEN_MODE                     WARDEN_MODE_NO_WARDEN
 
 /* WARDEN_MODE_REG/DYN/ADP_WARDEN -> SIM_LIMIT_FOR_BLOCKED_SENDING -- NEW in v.0.2.6:
  * Simulate a WARDEN already in this tool w/o relying on extra software.
