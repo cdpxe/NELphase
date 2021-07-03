@@ -3,8 +3,8 @@
  *
  * Keywords: Covert Channels, Network Steganography
  *
- * Copyright (C) 2017-2018 Steffen Wendzel, steffen (at) wendzel (dot) de
- *                    http://www.wendzel.de
+ * Copyright (C) 2017-2021 Steffen Wendzel, steffen (at) wendzel (dot) de
+ * 					https://www.wendzel.de
  *
  * Please have a look at our academic publications on the NEL phase
  * (see ./documentation/).
@@ -82,7 +82,7 @@
 #define WARDEN_MODE_REG_WARDEN  0x20
 #define WARDEN_MODE_DYN_WARDEN  0x40
 #define WARDEN_MODE_ADP_WARDEN  0x80 /* *SIMPLIFIED* Adaptive Warden(!) */
-#define WARDEN_MODE             WARDEN_MODE_DYN_WARDEN
+#define WARDEN_MODE			 WARDEN_MODE_DYN_WARDEN
 /* WARDEN_MODE_REG/DYN/ADP_WARDEN -> SIM_LIMIT_FOR_BLOCKED_SENDING -- NEW in v.0.2.6:
  * Simulate a WARDEN already in this tool w/o relying on extra software.
  * Values:
@@ -95,7 +95,7 @@
  * After how many seconds should we shuffle the active rules again?
  * Note: This is not exact. It is always RELOAD_INTERVAL+small overhead.
  */
-#define RELOAD_INTERVAL         10
+#define RELOAD_INTERVAL		 10
 /* WARDEN_MODE_ADP -> SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE:
  * How many of the recently triggered inactive rules are activated
  * during the next run?
@@ -107,15 +107,15 @@
 
 /* Some tests go here */
 #if (WARDEN_MODE == WARDEN_MODE_NO_WARDEN) && (SIM_LIMIT_FOR_BLOCKED_SENDING != 50)
-    #error SIM_LIMIT_FOR_BLOCKED_SENDING must be set to 0 if in NO-warden mode!
+	#error SIM_LIMIT_FOR_BLOCKED_SENDING must be set to 0 if in NO-warden mode!
 #endif
 
 #if (WARDEN_MODE == WARDEN_MODE_DYN_WARDEN) && (ANNOUNCED_PROTO_NUMBERS - SIM_LIMIT_FOR_BLOCKED_SENDING) < 1
-    #error Please check source code for error 0x377: too many blocked rules!
+	#error Please check source code for error 0x377: too many blocked rules!
 #endif
 
 #if (WARDEN_MODE == WARDEN_MODE_ADP_WARDEN) && (ANNOUNCED_PROTO_NUMBERS - SIM_LIMIT_FOR_BLOCKED_SENDING - SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE) < 1
-    #error Please check source code for error 0x378: too many inactive + blocked rules in combination.
+	#error Please check source code for error 0x378: too many inactive + blocked rules in combination.
 #endif
 
 /* remaining basic definitions */

@@ -4,7 +4,7 @@
  * Keywords: Covert Channels, Network Steganography
  *
  * Copyright (C) 2017-2021 Steffen Wendzel, steffen (at) wendzel (dot) de
- *                    https://www.wendzel.de
+ *					https://www.wendzel.de
  *
  * Please have a look at our academic publications on the NEL phase
  * (see ./documentation/).
@@ -246,20 +246,20 @@ void send_CC_packet(u_int32_t announced_proto)
 	if (system(buf) != 0) {
 		fprintf(stderr, "Fatal error: System command returned an error while "
 			"running '%s'. Please see scapy.log for details (maybe the wrong "
-            "scapy-cmd was provided?). Exiting.\n", buf);
-        exit(1);
+			"scapy-cmd was provided?). Exiting.\n", buf);
+		exit(1);
 	}
 }
 
 void pretend_sending(u_int32_t protonum)
 {
-    /* This system() is just to consume an approx. equal amount of time
-     *  as if we would ACTUALLY send the packet. */
-    if (system("echo 'exit;' | scapy >/dev/null 2>&1") != 0) {
-       fprintf(stderr, "Fatal: An error occured while calling 'scapy'.\n");
-       exit(1);
-    }
-    fprintf(stderr, "warden: internally blocked sending of protocol %u\n", protonum);
+	/* This system() is just to consume an approx. equal amount of time
+	 *  as if we would ACTUALLY send the packet. */
+	if (system("echo 'exit;' | scapy >/dev/null 2>&1") != 0) {
+	   fprintf(stderr, "Fatal: An error occured while calling 'scapy'.\n");
+	   exit(1);
+	}
+	fprintf(stderr, "warden: internally blocked sending of protocol %u\n", protonum);
 }
 
 /*************************
@@ -277,35 +277,35 @@ void *cs_NEL_handler(void *sockfd_ptr)
 #ifdef INCREMENTAL_PROTO_SELECT
 	int p = 0;
 #endif
-    
-    /* deactivate all rules by default */
-    bzero(ruleset_activation, sizeof(ruleset_activation));
-    for (i = 0; i < ANNOUNCED_PROTO_NUMBERS; i++)
-        ruleset_checked[i] = time(NULL);
-    
-    printf("Configuration. MODE=");
-    switch (WARDEN_MODE) {
-        case WARDEN_MODE_NO_WARDEN:  printf("NO WARDEN\n");  break;
-        case WARDEN_MODE_REG_WARDEN: printf("REGULAR WARDEN, "); break;
-        case WARDEN_MODE_DYN_WARDEN: printf("DYNAMIC WARDEN, "); break;
-        case WARDEN_MODE_ADP_WARDEN: printf("SIMPLIFIED ADAPTIVE WARDEN, "); break;
-        default: fprintf(stderr, "invalid mode! exiting.\n"); exit(1);
-    }
-    if (WARDEN_MODE != WARDEN_MODE_NO_WARDEN) {
-        printf("simul. blocking limit=%i", SIM_LIMIT_FOR_BLOCKED_SENDING);
-        printf(" (%f%%)", (float) 100*(ANNOUNCED_PROTO_NUMBERS - SIM_LIMIT_FOR_BLOCKED_SENDING) / ANNOUNCED_PROTO_NUMBERS);
-        if (WARDEN_MODE != WARDEN_MODE_REG_WARDEN) {
-            printf(", reload interval=%i", RELOAD_INTERVAL);
-        }
-        if (WARDEN_MODE == WARDEN_MODE_ADP_WARDEN) {
-            printf(", inactive_checked (ic)=%i (%f%%)", SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE,
-                (float) (100*SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE / ANNOUNCED_PROTO_NUMBERS));
-        }
-        putchar('\n');
-    }
-    preparation_done = 1;
+	
+	/* deactivate all rules by default */
+	bzero(ruleset_activation, sizeof(ruleset_activation));
+	for (i = 0; i < ANNOUNCED_PROTO_NUMBERS; i++)
+		ruleset_checked[i] = time(NULL);
+	
+	printf("Configuration. MODE=");
+	switch (WARDEN_MODE) {
+		case WARDEN_MODE_NO_WARDEN:  printf("NO WARDEN\n");  break;
+		case WARDEN_MODE_REG_WARDEN: printf("REGULAR WARDEN, "); break;
+		case WARDEN_MODE_DYN_WARDEN: printf("DYNAMIC WARDEN, "); break;
+		case WARDEN_MODE_ADP_WARDEN: printf("SIMPLIFIED ADAPTIVE WARDEN, "); break;
+		default: fprintf(stderr, "invalid mode! exiting.\n"); exit(1);
+	}
+	if (WARDEN_MODE != WARDEN_MODE_NO_WARDEN) {
+		printf("simul. blocking limit=%i", SIM_LIMIT_FOR_BLOCKED_SENDING);
+		printf(" (%f%%)", (float) 100*(ANNOUNCED_PROTO_NUMBERS - SIM_LIMIT_FOR_BLOCKED_SENDING) / ANNOUNCED_PROTO_NUMBERS);
+		if (WARDEN_MODE != WARDEN_MODE_REG_WARDEN) {
+			printf(", reload interval=%i", RELOAD_INTERVAL);
+		}
+		if (WARDEN_MODE == WARDEN_MODE_ADP_WARDEN) {
+			printf(", inactive_checked (ic)=%i (%f%%)", SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE,
+				(float) (100*SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE / ANNOUNCED_PROTO_NUMBERS));
+		}
+		putchar('\n');
+	}
+	preparation_done = 1;
 
-    while (1) {
+	while (1) {
 		bzero(&buf, sizeof(buf));
 #ifdef INCREMENTAL_PROTO_SELECT
 		buf.announced_proto = p++ % ANNOUNCED_PROTO_NUMBERS;
@@ -324,29 +324,29 @@ void *cs_NEL_handler(void *sockfd_ptr)
 		
 		/* send NUM_NEL_TESTPKT_SND_PKTS_P_PROT packets of test traffic each time */
 		for (i = 0; i < NUM_NEL_TESTPKT_SND_PKTS_P_PROT /*XXX: NEL! */; i++) {
-            /* NEW (0.2.6): simulate a simple regular warden that blocks a fraction of the CCs */
-            if (WARDEN_MODE == WARDEN_MODE_REG_WARDEN || WARDEN_MODE == WARDEN_MODE_NO_WARDEN) {
-                /* In case of WARDEN_MODE_NO_WARDEN, SIM_LIMIT_FOR_BLOCKED_SENDING
-                 * must block none of the CCs! */
-                if (buf.announced_proto < SIM_LIMIT_FOR_BLOCKED_SENDING) {
-                    send_CC_packet(buf.announced_proto);
-                } else {
-                    pretend_sending(buf.announced_proto); /* just consume time */
-                }
-            } else if (WARDEN_MODE == WARDEN_MODE_DYN_WARDEN || WARDEN_MODE == WARDEN_MODE_ADP_WARDEN) {
-                /* send packet if protocol is NOT blocked */
-                if (ruleset_activation[buf.announced_proto] == 0) {
-                    send_CC_packet(buf.announced_proto);
-                    if (WARDEN_MODE == WARDEN_MODE_ADP_WARDEN) {
-                        /* register rule as recently checked */
-                        ruleset_checked[buf.announced_proto] = time(NULL);
-                    }
-                } else {
-                    pretend_sending(buf.announced_proto); /* just consume time */
-                }
-            }
-        }
-        
+			/* NEW (0.2.6): simulate a simple regular warden that blocks a fraction of the CCs */
+			if (WARDEN_MODE == WARDEN_MODE_REG_WARDEN || WARDEN_MODE == WARDEN_MODE_NO_WARDEN) {
+				/* In case of WARDEN_MODE_NO_WARDEN, SIM_LIMIT_FOR_BLOCKED_SENDING
+				 * must block none of the CCs! */
+				if (buf.announced_proto < SIM_LIMIT_FOR_BLOCKED_SENDING) {
+					send_CC_packet(buf.announced_proto);
+				} else {
+					pretend_sending(buf.announced_proto); /* just consume time */
+				}
+			} else if (WARDEN_MODE == WARDEN_MODE_DYN_WARDEN || WARDEN_MODE == WARDEN_MODE_ADP_WARDEN) {
+				/* send packet if protocol is NOT blocked */
+				if (ruleset_activation[buf.announced_proto] == 0) {
+					send_CC_packet(buf.announced_proto);
+					if (WARDEN_MODE == WARDEN_MODE_ADP_WARDEN) {
+						/* register rule as recently checked */
+						ruleset_checked[buf.announced_proto] = time(NULL);
+					}
+				} else {
+					pretend_sending(buf.announced_proto); /* just consume time */
+				}
+			}
+		}
+		
 		/* after we sent the test packets for the selected hiding technique,
 		 * wait for the answer of the CR that informs us about the number of
 		 * packets it received of the particular CC hiding technique. */
@@ -391,37 +391,37 @@ void *cs_COMM_sender(void *unused)
 		sent_during_current_loop = 0;
 		for (i = 0; i < ANNOUNCED_PROTO_NUMBERS; i++) {
 			proto.announced_proto = i;
-            if (P_nb[i] == 1) {
+			if (P_nb[i] == 1) {
 				//printf("non-blocked protocol %i found\n", i);
-                /* We found a non-blocked protocol, now use this protocol to
-                 * send NUM_COMM_PHASE_SND_PKTS_P_PROT packets. */
+				/* We found a non-blocked protocol, now use this protocol to
+				 * send NUM_COMM_PHASE_SND_PKTS_P_PROT packets. */
 				int pkt_cnt = 0;
 				for (pkt_cnt = 0;
-				     pkt_cnt < NUM_COMM_PHASE_SND_PKTS_P_PROT /*XXX: COMM-P.! */;
-				     pkt_cnt++) {
-                    /* use this non-blocked protocol + try sending it! */
-                    if (WARDEN_MODE == WARDEN_MODE_NO_WARDEN) {
-                        send_CC_packet(proto.announced_proto);
-                    } else {
-                        if (WARDEN_MODE == WARDEN_MODE_REG_WARDEN) {
-                            if (proto.announced_proto < SIM_LIMIT_FOR_BLOCKED_SENDING) {
-                                send_CC_packet(proto.announced_proto);
-                            } else {
-                                pretend_sending(proto.announced_proto); /* just consume time */
-                            }
-                        } else if (WARDEN_MODE == WARDEN_MODE_DYN_WARDEN || WARDEN_MODE == WARDEN_MODE_ADP_WARDEN) {
-                                if (ruleset_activation[proto.announced_proto] == 0) {
-                                    send_CC_packet(proto.announced_proto);
-                                } else {
-                                    pretend_sending(proto.announced_proto); /* just consume time */
-                                }
-                                
-                                if (WARDEN_MODE == WARDEN_MODE_ADP_WARDEN) {
-                                    /* register rule as recently checked */
-                                    ruleset_checked[proto.announced_proto] = time(NULL);
-                                }
-                        }
-                    }
+					 pkt_cnt < NUM_COMM_PHASE_SND_PKTS_P_PROT /*XXX: COMM-P.! */;
+					 pkt_cnt++) {
+					/* use this non-blocked protocol + try sending it! */
+					if (WARDEN_MODE == WARDEN_MODE_NO_WARDEN) {
+						send_CC_packet(proto.announced_proto);
+					} else {
+						if (WARDEN_MODE == WARDEN_MODE_REG_WARDEN) {
+							if (proto.announced_proto < SIM_LIMIT_FOR_BLOCKED_SENDING) {
+								send_CC_packet(proto.announced_proto);
+							} else {
+								pretend_sending(proto.announced_proto); /* just consume time */
+							}
+						} else if (WARDEN_MODE == WARDEN_MODE_DYN_WARDEN || WARDEN_MODE == WARDEN_MODE_ADP_WARDEN) {
+								if (ruleset_activation[proto.announced_proto] == 0) {
+									send_CC_packet(proto.announced_proto);
+								} else {
+									pretend_sending(proto.announced_proto); /* just consume time */
+								}
+								
+								if (WARDEN_MODE == WARDEN_MODE_ADP_WARDEN) {
+									/* register rule as recently checked */
+									ruleset_checked[proto.announced_proto] = time(NULL);
+								}
+						}
+					}
 				}
 				pkts_sent += NUM_COMM_PHASE_SND_PKTS_P_PROT;
 				sent_during_current_loop = 1;
@@ -437,7 +437,7 @@ void *cs_COMM_sender(void *unused)
 	}
 
 	fprintf(stderr, "\n===== COMMUNICATION PHASE COMPLETED (or reached limit of packets to send -- NUM_COMM_PHASE_PKTS) =====\n");
-    fprintf(stderr, "\n===== %i packets have been sent.\n", pkts_sent);
+	fprintf(stderr, "\n===== %i packets have been sent.\n", pkts_sent);
 	fprintf(stderr, "exiting.\n");
 	exit(0);
 	/* NOTREACHED */
@@ -447,89 +447,89 @@ void *cs_COMM_sender(void *unused)
 /* For DYNAMIC and ADAPTIVE warden only: shuffle rules every RELOAD_INTERVAL [sec] */
 void *cs_RuleReloader(void *unused)
 {
-    time_t last_timestamp = 0; /* force shuffling on loop entry */
+	time_t last_timestamp = 0; /* force shuffling on loop entry */
 
-    /* wait until preparation is done */
-    while (preparation_done == 0) {
-        usleep(10000);
-    }
-    
+	/* wait until preparation is done */
+	while (preparation_done == 0) {
+		usleep(10000);
+	}
+	
 	if (WARDEN_MODE == WARDEN_MODE_DYN_WARDEN || WARDEN_MODE == WARDEN_MODE_ADP_WARDEN) {
-        while (1) {
-                /* check if time for shuffling activated rules is due */
-                if ((last_timestamp + RELOAD_INTERVAL) < time(NULL)) {
-                    last_timestamp = time(NULL);
-                    int counter = 0;
-                    int inactive2active = 0;
-                    /* shuffle rules: first set all rules to zero (=deactivated) */
-                    bzero(ruleset_activation, sizeof(ruleset_activation));
-                    
-                    switch (WARDEN_MODE) {
-                        case WARDEN_MODE_DYN_WARDEN:
-                            /* activate 50-SIM_LIMIT_FOR_BLOCKED_SENDING protocols randomly */
-                            for (counter = 0; counter < (ANNOUNCED_PROTO_NUMBERS - SIM_LIMIT_FOR_BLOCKED_SENDING); counter++) {
-                                int rule = rand() % ANNOUNCED_PROTO_NUMBERS;
-                                /* find next suitable slot */
-                                /* find the next free protocol to activate in case the current one is already activated */
-                                while (ruleset_activation[rule % ANNOUNCED_PROTO_NUMBERS] == 1) {
-                                    rule++;
-                                }
-                                ruleset_activation[rule % ANNOUNCED_PROTO_NUMBERS] = 1;
-                            }
-                            break;
-                        case WARDEN_MODE_ADP_WARDEN:
-                            /* take the SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE latest triggered (checked) inactive rules into
-                             * the active ruleset (and reset them to zero) */
-                            printf("Activated the following previously triggered inactive rules: ");
-                            for (inactive2active = 0; inactive2active < SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE; inactive2active++) {
-                                time_t max_time = 0;
-                                int max_node = 0;
-                                /* find max value (most recent trigger) */
-                                for (counter = inactive2active; counter < ANNOUNCED_PROTO_NUMBERS; counter++) {
-                                    if (max_time < ruleset_checked[counter]) {
-                                        max_time = ruleset_checked[counter];
-                                        max_node = counter;
-                                    }
-                                }
-                                /* active rule with max value; has a negliable race condition as COM phase could just
-                                 * re-set the same rule again, but this is very unlikely and would influence the
-                                 * measurements very, very slightly, if at all. */
-                                ruleset_activation[max_node] = 1;
-                                // set the rule's value to zero so that the rule must first be triggered again before being used
-                                ruleset_checked[max_node] = 0;
-                                printf("%i, ", max_node);
-                            }
-                            printf("result: {");
-                            for (counter = 0; counter < ANNOUNCED_PROTO_NUMBERS; counter++)
-                                printf("%i,", ruleset_activation[counter]);
-                            printf("}\n");
-                            /* activate the remaining 50-SIM_LIMIT_FOR_BLOCKED_SENDING-SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE
-                             * protocols randomly */
-                            for (counter = 0;
-                                 counter < (ANNOUNCED_PROTO_NUMBERS - SIM_LIMIT_FOR_BLOCKED_SENDING
-                                            - SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE); counter++) {
-                                int rule = rand() % ANNOUNCED_PROTO_NUMBERS;
-                                /* find next suitable slot */
-                                /* find the next free protocol to activate in case the current one is already activated */
-                                while (ruleset_activation[rule % ANNOUNCED_PROTO_NUMBERS] == 1) {
-                                    rule++;
-                                }
-                                ruleset_activation[rule % ANNOUNCED_PROTO_NUMBERS] = 1;
-                            }
-                            break;
-                    }
-                    printf("activated rules: {");
-                    for (counter = 0; counter < ANNOUNCED_PROTO_NUMBERS; counter++)
-                        printf("%i,", ruleset_activation[counter]);
-                    printf("}\n");
-                }
-                usleep(200000);
-                //fprintf(stderr,"=================RULE RELOAD CHECK===============\n");
-        }
-    } else {
-        /* not applicable for a non-warden / regular warden scenario */
-        /* FALLTHROUGH -> return NULL */
-    }
-    return NULL;
+		while (1) {
+				/* check if time for shuffling activated rules is due */
+				if ((last_timestamp + RELOAD_INTERVAL) < time(NULL)) {
+					last_timestamp = time(NULL);
+					int counter = 0;
+					int inactive2active = 0;
+					/* shuffle rules: first set all rules to zero (=deactivated) */
+					bzero(ruleset_activation, sizeof(ruleset_activation));
+					
+					switch (WARDEN_MODE) {
+						case WARDEN_MODE_DYN_WARDEN:
+							/* activate 50-SIM_LIMIT_FOR_BLOCKED_SENDING protocols randomly */
+							for (counter = 0; counter < (ANNOUNCED_PROTO_NUMBERS - SIM_LIMIT_FOR_BLOCKED_SENDING); counter++) {
+								int rule = rand() % ANNOUNCED_PROTO_NUMBERS;
+								/* find next suitable slot */
+								/* find the next free protocol to activate in case the current one is already activated */
+								while (ruleset_activation[rule % ANNOUNCED_PROTO_NUMBERS] == 1) {
+									rule++;
+								}
+								ruleset_activation[rule % ANNOUNCED_PROTO_NUMBERS] = 1;
+							}
+							break;
+						case WARDEN_MODE_ADP_WARDEN:
+							/* take the SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE latest triggered (checked) inactive rules into
+							 * the active ruleset (and reset them to zero) */
+							printf("Activated the following previously triggered inactive rules: ");
+							for (inactive2active = 0; inactive2active < SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE; inactive2active++) {
+								time_t max_time = 0;
+								int max_node = 0;
+								/* find max value (most recent trigger) */
+								for (counter = inactive2active; counter < ANNOUNCED_PROTO_NUMBERS; counter++) {
+									if (max_time < ruleset_checked[counter]) {
+										max_time = ruleset_checked[counter];
+										max_node = counter;
+									}
+								}
+								/* active rule with max value; has a negliable race condition as COM phase could just
+								 * re-set the same rule again, but this is very unlikely and would influence the
+								 * measurements very, very slightly, if at all. */
+								ruleset_activation[max_node] = 1;
+								// set the rule's value to zero so that the rule must first be triggered again before being used
+								ruleset_checked[max_node] = 0;
+								printf("%i, ", max_node);
+							}
+							printf("result: {");
+							for (counter = 0; counter < ANNOUNCED_PROTO_NUMBERS; counter++)
+								printf("%i,", ruleset_activation[counter]);
+							printf("}\n");
+							/* activate the remaining 50-SIM_LIMIT_FOR_BLOCKED_SENDING-SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE
+							 * protocols randomly */
+							for (counter = 0;
+								 counter < (ANNOUNCED_PROTO_NUMBERS - SIM_LIMIT_FOR_BLOCKED_SENDING
+											- SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE); counter++) {
+								int rule = rand() % ANNOUNCED_PROTO_NUMBERS;
+								/* find next suitable slot */
+								/* find the next free protocol to activate in case the current one is already activated */
+								while (ruleset_activation[rule % ANNOUNCED_PROTO_NUMBERS] == 1) {
+									rule++;
+								}
+								ruleset_activation[rule % ANNOUNCED_PROTO_NUMBERS] = 1;
+							}
+							break;
+					}
+					printf("activated rules: {");
+					for (counter = 0; counter < ANNOUNCED_PROTO_NUMBERS; counter++)
+						printf("%i,", ruleset_activation[counter]);
+					printf("}\n");
+				}
+				usleep(200000);
+				//fprintf(stderr,"=================RULE RELOAD CHECK===============\n");
+		}
+	} else {
+		/* not applicable for a non-warden / regular warden scenario */
+		/* FALLTHROUGH -> return NULL */
+	}
+	return NULL;
 }
 

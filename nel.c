@@ -4,7 +4,7 @@
  * Keywords: Covert Channels, Network Steganography
  *
  * Copyright (C) 2017 Steffen Wendzel, steffen (at) wendzel (dot) de
- *                    http://www.wendzel.de
+ *					http://www.wendzel.de
  *
  * Please have a look at our academic publications on the NEL phase
  * (see ./documentation/).
@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
 		srv.sin_family = AF_INET;
 		srv.sin_port = htons(12345);
 		if (connect(sockfd, (struct sockaddr *) &srv,
-		    sizeof(srv)) < 0) {
+			sizeof(srv)) < 0) {
 			perror("connect");
 			exit(1);
 		}
@@ -115,12 +115,12 @@ int main(int argc, char *argv[])
 			exit(1);
 		}
 		/* rule reloader */
-        if (WARDEN_MODE == WARDEN_MODE_DYN_WARDEN || WARDEN_MODE == WARDEN_MODE_ADP_WARDEN) {
-            if (pthread_create(&th_rule_reload, NULL, cs_RuleReloader, NULL)) {
-                perror("pthread_create(rule_reloader.CS)");
-                exit(1);
-            }
-        }
+		if (WARDEN_MODE == WARDEN_MODE_DYN_WARDEN || WARDEN_MODE == WARDEN_MODE_ADP_WARDEN) {
+			if (pthread_create(&th_rule_reload, NULL, cs_RuleReloader, NULL)) {
+				perror("pthread_create(rule_reloader.CS)");
+				exit(1);
+			}
+		}
 		/* clean-up */
 		if(pthread_join(th1, NULL)) {
 			perror("pthread joining error");
@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
 		}
 		
 		if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR,
-		    &(int){1}, sizeof(int)) < 0) {
+			&(int){1}, sizeof(int)) < 0) {
 			perror("setsockopt");
 			exit(1);
 		}
