@@ -82,7 +82,7 @@
 #define WARDEN_MODE_REG_WARDEN  0x20
 #define WARDEN_MODE_DYN_WARDEN  0x40
 #define WARDEN_MODE_ADP_WARDEN  0x80 /* *SIMPLIFIED* Adaptive Warden(!) */
-#define WARDEN_MODE             WARDEN_MODE_REG_WARDEN
+#define WARDEN_MODE             WARDEN_MODE_DYN_WARDEN
 /* WARDEN_MODE_REG/DYN/ADP_WARDEN -> SIM_LIMIT_FOR_BLOCKED_SENDING -- NEW in v.0.2.6:
  * Simulate a WARDEN already in this tool w/o relying on extra software.
  * Values:
@@ -139,6 +139,7 @@ typedef struct {
 
 void *cs_COMM_sender(void *);
 void *cs_NEL_handler(void *);
+void *cs_RuleReloader(void *);
 void *cr_NEL_handler(void *);
 void *cr_measure(void *);
 void usage(void);

@@ -198,6 +198,7 @@ char *ruleset[ANNOUNCED_PROTO_NUMBERS+1][3] = {
 };
 int ruleset_activation[ANNOUNCED_PROTO_NUMBERS];
 time_t ruleset_checked[ANNOUNCED_PROTO_NUMBERS];
+int preparation_done = 0;
 
 
 /*************************
@@ -276,7 +277,6 @@ void *cs_NEL_handler(void *sockfd_ptr)
 #ifdef INCREMENTAL_PROTO_SELECT
 	int p = 0;
 #endif
-    time_t last_timestamp = 0; /* force shuffling on loop entry */
     
     /* deactivate all rules by default */
     bzero(ruleset_activation, sizeof(ruleset_activation));
@@ -303,6 +303,7 @@ void *cs_NEL_handler(void *sockfd_ptr)
         }
         putchar('\n');
     }
+    preparation_done = 1;
 
     while (1) {
 		bzero(&buf, sizeof(buf));
@@ -333,73 +334,6 @@ void *cs_NEL_handler(void *sockfd_ptr)
                     pretend_sending(buf.announced_proto); /* just consume time */
                 }
             } else if (WARDEN_MODE == WARDEN_MODE_DYN_WARDEN || WARDEN_MODE == WARDEN_MODE_ADP_WARDEN) {
-                /* check if time for shuffling activated rules is due */
-                if ((last_timestamp + RELOAD_INTERVAL) < time(NULL)) {
-                    last_timestamp = time(NULL);
-                    int counter = 0;
-                    int inactive2active = 0;
-                    /* shuffle rules: first set all rules to zero (=deactivated) */
-                    bzero(ruleset_activation, sizeof(ruleset_activation));
-                    
-                    switch (WARDEN_MODE) {
-                        case WARDEN_MODE_DYN_WARDEN:
-                            /* activate 50-SIM_LIMIT_FOR_BLOCKED_SENDING protocols randomly */
-                            for (counter = 0; counter < (ANNOUNCED_PROTO_NUMBERS - SIM_LIMIT_FOR_BLOCKED_SENDING); counter++) {
-                                int rule = rand() % ANNOUNCED_PROTO_NUMBERS;
-                                /* find next suitable slot */
-                                /* find the next free protocol to activate in case the current one is already activated */
-                                while (ruleset_activation[rule % ANNOUNCED_PROTO_NUMBERS] == 1) {
-                                    rule++;
-                                }
-                                ruleset_activation[rule % ANNOUNCED_PROTO_NUMBERS] = 1;
-                            }
-                            break;
-                        case WARDEN_MODE_ADP_WARDEN:
-                            /* take the SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE latest triggered (checked) inactive rules into
-                             * the active ruleset (and reset them to zero) */
-                            printf("Activated the following previously triggered inactive rules: ");
-                            for (inactive2active = 0; inactive2active < SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE; inactive2active++) {
-                                time_t max_time = 0;
-                                int max_node = 0;
-                                /* find max value (most recent trigger) */
-                                for (counter = inactive2active; counter < ANNOUNCED_PROTO_NUMBERS; counter++) {
-                                    if (max_time < ruleset_checked[counter]) {
-                                        max_time = ruleset_checked[counter];
-                                        max_node = counter;
-                                    }
-                                }
-                                /* active rule with max value; has a negliable race condition as COM phase could just
-                                 * re-set the same rule again, but this is very unlikely and would influence the
-                                 * measurements very, very slightly, if at all. */
-                                ruleset_activation[max_node] = 1;
-                                // set the rule's value to zero so that the rule must first be triggered again before being used
-                                ruleset_checked[max_node] = 0;
-                                printf("%i, ", max_node);
-                            }
-                    printf("result: {");
-                    for (counter = 0; counter < ANNOUNCED_PROTO_NUMBERS; counter++)
-                        printf("%i,", ruleset_activation[counter]);
-                    printf("}\n");
-                            /* activate the remaining 50-SIM_LIMIT_FOR_BLOCKED_SENDING-SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE
-                             * protocols randomly */
-                            for (counter = 0;
-                                 counter < (ANNOUNCED_PROTO_NUMBERS - SIM_LIMIT_FOR_BLOCKED_SENDING
-                                            - SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE); counter++) {
-                                int rule = rand() % ANNOUNCED_PROTO_NUMBERS;
-                                /* find next suitable slot */
-                                /* find the next free protocol to activate in case the current one is already activated */
-                                while (ruleset_activation[rule % ANNOUNCED_PROTO_NUMBERS] == 1) {
-                                    rule++;
-                                }
-                                ruleset_activation[rule % ANNOUNCED_PROTO_NUMBERS] = 1;
-                            }
-                            break;
-                    }
-                    printf("activated rules: {");
-                    for (counter = 0; counter < ANNOUNCED_PROTO_NUMBERS; counter++)
-                        printf("%i,", ruleset_activation[counter]);
-                    printf("}\n");
-                }
                 /* send packet if protocol is NOT blocked */
                 if (ruleset_activation[buf.announced_proto] == 0) {
                     send_CC_packet(buf.announced_proto);
@@ -453,7 +387,7 @@ void *cs_COMM_sender(void *unused)
 	/* iterate through P_bn to send NUM_COMM_PHASE_PKTS packets,
 	 * only use available protocols marked as non-blocked in P_nb
 	 */
-	while (pkts_sent < NUM_COMM_PHASE_PKTS*100 /* FIXME */) {
+	while (pkts_sent < NUM_COMM_PHASE_PKTS) {
 		sent_during_current_loop = 0;
 		for (i = 0; i < ANNOUNCED_PROTO_NUMBERS; i++) {
 			proto.announced_proto = i;
@@ -510,4 +444,92 @@ void *cs_COMM_sender(void *unused)
 	return NULL;
 }
 
+/* For DYNAMIC and ADAPTIVE warden only: shuffle rules every RELOAD_INTERVAL [sec] */
+void *cs_RuleReloader(void *unused)
+{
+    time_t last_timestamp = 0; /* force shuffling on loop entry */
+
+    /* wait until preparation is done */
+    while (preparation_done == 0) {
+        usleep(10000);
+    }
+    
+	if (WARDEN_MODE == WARDEN_MODE_DYN_WARDEN || WARDEN_MODE == WARDEN_MODE_ADP_WARDEN) {
+        while (1) {
+                /* check if time for shuffling activated rules is due */
+                if ((last_timestamp + RELOAD_INTERVAL) < time(NULL)) {
+                    last_timestamp = time(NULL);
+                    int counter = 0;
+                    int inactive2active = 0;
+                    /* shuffle rules: first set all rules to zero (=deactivated) */
+                    bzero(ruleset_activation, sizeof(ruleset_activation));
+                    
+                    switch (WARDEN_MODE) {
+                        case WARDEN_MODE_DYN_WARDEN:
+                            /* activate 50-SIM_LIMIT_FOR_BLOCKED_SENDING protocols randomly */
+                            for (counter = 0; counter < (ANNOUNCED_PROTO_NUMBERS - SIM_LIMIT_FOR_BLOCKED_SENDING); counter++) {
+                                int rule = rand() % ANNOUNCED_PROTO_NUMBERS;
+                                /* find next suitable slot */
+                                /* find the next free protocol to activate in case the current one is already activated */
+                                while (ruleset_activation[rule % ANNOUNCED_PROTO_NUMBERS] == 1) {
+                                    rule++;
+                                }
+                                ruleset_activation[rule % ANNOUNCED_PROTO_NUMBERS] = 1;
+                            }
+                            break;
+                        case WARDEN_MODE_ADP_WARDEN:
+                            /* take the SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE latest triggered (checked) inactive rules into
+                             * the active ruleset (and reset them to zero) */
+                            printf("Activated the following previously triggered inactive rules: ");
+                            for (inactive2active = 0; inactive2active < SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE; inactive2active++) {
+                                time_t max_time = 0;
+                                int max_node = 0;
+                                /* find max value (most recent trigger) */
+                                for (counter = inactive2active; counter < ANNOUNCED_PROTO_NUMBERS; counter++) {
+                                    if (max_time < ruleset_checked[counter]) {
+                                        max_time = ruleset_checked[counter];
+                                        max_node = counter;
+                                    }
+                                }
+                                /* active rule with max value; has a negliable race condition as COM phase could just
+                                 * re-set the same rule again, but this is very unlikely and would influence the
+                                 * measurements very, very slightly, if at all. */
+                                ruleset_activation[max_node] = 1;
+                                // set the rule's value to zero so that the rule must first be triggered again before being used
+                                ruleset_checked[max_node] = 0;
+                                printf("%i, ", max_node);
+                            }
+                            printf("result: {");
+                            for (counter = 0; counter < ANNOUNCED_PROTO_NUMBERS; counter++)
+                                printf("%i,", ruleset_activation[counter]);
+                            printf("}\n");
+                            /* activate the remaining 50-SIM_LIMIT_FOR_BLOCKED_SENDING-SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE
+                             * protocols randomly */
+                            for (counter = 0;
+                                 counter < (ANNOUNCED_PROTO_NUMBERS - SIM_LIMIT_FOR_BLOCKED_SENDING
+                                            - SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE); counter++) {
+                                int rule = rand() % ANNOUNCED_PROTO_NUMBERS;
+                                /* find next suitable slot */
+                                /* find the next free protocol to activate in case the current one is already activated */
+                                while (ruleset_activation[rule % ANNOUNCED_PROTO_NUMBERS] == 1) {
+                                    rule++;
+                                }
+                                ruleset_activation[rule % ANNOUNCED_PROTO_NUMBERS] = 1;
+                            }
+                            break;
+                    }
+                    printf("activated rules: {");
+                    for (counter = 0; counter < ANNOUNCED_PROTO_NUMBERS; counter++)
+                        printf("%i,", ruleset_activation[counter]);
+                    printf("}\n");
+                }
+                usleep(200000);
+                //fprintf(stderr,"=================RULE RELOAD CHECK===============\n");
+        }
+    } else {
+        /* not applicable for a non-warden / regular warden scenario */
+        /* FALLTHROUGH -> return NULL */
+    }
+    return NULL;
+}
 

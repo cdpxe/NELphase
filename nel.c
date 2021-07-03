@@ -43,6 +43,7 @@ int main(int argc, char *argv[])
 	int sockfd, clifd;
 	pthread_t th1, th2;
 	pthread_t th_comm_ph; /* only SENDER for COMM. phase */
+	pthread_t th_rule_reload; /* only SENDER for DYN+ADP warden */
 	extern char *ruleset[ANNOUNCED_PROTO_NUMBERS][3];
 	
 	printf(WELCOME_MESSAGE);
@@ -113,6 +114,13 @@ int main(int argc, char *argv[])
 			perror("pthread_create(comm.phase.CS)");
 			exit(1);
 		}
+		/* rule reloader */
+        if (WARDEN_MODE == WARDEN_MODE_DYN_WARDEN || WARDEN_MODE == WARDEN_MODE_ADP_WARDEN) {
+            if (pthread_create(&th_rule_reload, NULL, cs_RuleReloader, NULL)) {
+                perror("pthread_create(rule_reloader.CS)");
+                exit(1);
+            }
+        }
 		/* clean-up */
 		if(pthread_join(th1, NULL)) {
 			perror("pthread joining error");
