@@ -136,17 +136,45 @@ If you update `ruleset`, make sure that you keep `{NULL, NULL, NULL}` at the end
 
 # Active Wardens Simulation
 
-By default, the NEL tool simulates no warden. However, it can simulate a regular warden (static ruleset), a dynamic warden (see Mazurczyk et al., 2019) as well as a simplified version of the adaptive warden (see Chourib et al., 2021). The warden behavior can be turned on in `nel.h`. In the file, one can also configure warden-specific behavior, such as
+By default, the NEL tool simulates no warden. However, it can simulate a regular warden (static ruleset), a dynamic warden (see Mazurczyk et al., 2019) as well as a simplified version of the adaptive warden (see Chourib et al., 2021). The warden behavior can be turned on in `nel.h`. To active one of the wardens, simply use one of the specified macros for `WARDEN_MODE` in `nel.h`. For example, the following line turns on the *adaptive* warden:
+
+```
+#define WARDEN_MODE WARDEN_MODE_ADP_WARDEN
+```
+
+In `nel.h`, one can also configure warden-specific behavior, such as
 
 - the fraction of filtered packets for regular wardens;
 - the reload interval (corresponds to the reload frequency) for dynamic and adaptive wardens;
 - the size of the inactive-checked rules that are moved to the active rules during the next time-slot (only adaptive warden).
 
-To active one of the wardens, simply use one of the specified macros for `WARDEN_MODE` in `nel.h`. For example, the following line turns on the *adaptive* warden:
+Therefore, the following macros can be edited:
 
 ```
-#define WARDEN_MODE WARDEN_MODE_ADP_WARDEN
+/* WARDEN_MODE_REG/DYN/ADP_WARDEN -> SIM_LIMIT_FOR_BLOCKED_SENDING -- NEW in v.0.2.6:
+ * Simulate a WARDEN already in this tool w/o relying on extra software.
+ * Values:
+ * 0=sender will send 0% (block 100%) of the probe packets;
+ * 2=sender will send 4% (block 96%) of the probe packets;
+ * 25=sender will send/block 50% of the probe packets;
+ * 50=sender will send 100% of the probe protocols (DEFAULT) */
+#define SIM_LIMIT_FOR_BLOCKED_SENDING 25
+/* WARDEN_MODE_DYN/ADP -> RELOAD_INTERVAL [seconds]:
+ * After how many seconds should we shuffle the active rules again?
+ * Note: This is not exact. It is always RELOAD_INTERVAL+small overhead.
+ */
+#define RELOAD_INTERVAL		 10
+/* WARDEN_MODE_ADP -> SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE:
+ * How many of the recently triggered inactive rules are activated
+ * during the next run?
+ * 0=No rules will be moved (essentially this means: deactivation of feature!)
+ * 2=the 2 latest triggered rules would be moved
+ * 50=All rules will be moved (i.e. warden only based on observations of triggers!)
+ */
+#define SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE  5
 ```
+
+
 
 # Scientific Work Using NELTool
 
