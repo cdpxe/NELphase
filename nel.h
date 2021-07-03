@@ -52,7 +52,8 @@
 				"WWW: https://www.wendzel.de\n" \
 				"Version " TOOL_VERSION "\n\n"
 
-/* How many CCs do we know? */
+/* How many CCs are implemented (cs.c)? This value needs to match
+ * the number of array "ruleset"'s elements! */
 #define ANNOUNCED_PROTO_NUMBERS		50
 
 /* CR_NEL_TESTPKT_WAITING_TIME:
@@ -78,11 +79,12 @@
  * how many packets to be sent per CC type during *NEL* phase */
 #define NUM_NEL_TESTPKT_SND_PKTS_P_PROT 5
 
-#define WARDEN_MODE_NO_WARDEN   0x10
-#define WARDEN_MODE_REG_WARDEN  0x20
-#define WARDEN_MODE_DYN_WARDEN  0x40
-#define WARDEN_MODE_ADP_WARDEN  0x80 /* *SIMPLIFIED* Adaptive Warden(!) */
-#define WARDEN_MODE			 WARDEN_MODE_REG_WARDEN
+#define WARDEN_MODE_NO_WARDEN           0x10
+#define WARDEN_MODE_REG_WARDEN          0x20
+#define WARDEN_MODE_DYN_WARDEN          0x40
+#define WARDEN_MODE_ADP_WARDEN          0x80 /* *SIMPLIFIED* Adaptive Warden(!) */
+#define WARDEN_MODE                     WARDEN_MODE_ADP_WARDEN
+
 /* WARDEN_MODE_REG/DYN/ADP_WARDEN -> SIM_LIMIT_FOR_BLOCKED_SENDING -- NEW in v.0.2.6:
  * Simulate a WARDEN already in this tool w/o relying on extra software.
  * Values:
@@ -90,8 +92,8 @@
  * 2=sender will send 4% (block 96%) of the probe packets;
  * 25=sender will send/block 50% of the probe packets;
  * 50=sender will send 100% of the probe protocols (DEFAULT) */
-#define SIM_LIMIT_FOR_BLOCKED_SENDING 4
-/* WARDEN_MODE_DYN/ADP -> RELOAD_INTERVAL:
+#define SIM_LIMIT_FOR_BLOCKED_SENDING 25
+/* WARDEN_MODE_DYN/ADP -> RELOAD_INTERVAL [seconds]:
  * After how many seconds should we shuffle the active rules again?
  * Note: This is not exact. It is always RELOAD_INTERVAL+small overhead.
  */
@@ -121,7 +123,7 @@
 /* remaining basic definitions */
 #define MODE_UNSET		0x00
 #define MODE_SENDER		0x01
-#define MODE_RECEIVER	0x02
+#define MODE_RECEIVER           0x02
 
 /* INCREMENTAL_PROTO_SELECT:
  * This macro (if uncommented) ensures that protocols are selected in an incremental
@@ -132,8 +134,8 @@
 
 typedef struct {
 	u_int32_t		announced_proto;
-#define RESULT_RECVD		0x01
-#define RESULT_TIMEOUT		0x00		/* not received during time-slot */
+#define RESULT_RECVD		0x01 /* received during time-slot */
+#define RESULT_TIMEOUT		0x00 /* not received during time-slot */
 	u_int32_t		result;
 } nel_proto_t;
 
