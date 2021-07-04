@@ -3,8 +3,8 @@
  *
  * Keywords: Covert Channels, Network Steganography
  *
- * Copyright (C) 2017 Steffen Wendzel, steffen (at) wendzel (dot) de
- *                    http://www.wendzel.de
+ * Copyright (C) 2017-2021 Steffen Wendzel, steffen (at) wendzel (dot) de
+ *                    https://www.wendzel.de
  *
  * Please have a look at our academic publications on the NEL phase
  * (see ./documentation/).
@@ -133,8 +133,7 @@ void *cr_measure(void *unused)
 	if ((handle_measure = pcap_open_live(net_if, snapshot_len, promisc,
 					     timeout, err_buf)) == NULL) {
 		perror("pcap_open_live in cr_measure");
-		sleep(1);
-		return 0;
+		exit(1);
 	}
 	
 	fprintf(stderr, "setting up pcap combined filter CC traffic ...\n");
@@ -165,14 +164,12 @@ void *cr_measure(void *unused)
 			PCAP_NETMASK_UNKNOWN) != 0) {
 		fprintf(stderr, "pcap_compile() error in cr_measure()");
 		pcap_perror(handle_measure, "pcap_compile in cr_measure");
-		sleep(1);
-		return 0;
+		exit(1);
 	}
 	if (pcap_setfilter(handle_measure, &filter) == -1) {
 		fprintf(stderr, "pcap_setfilter() error in cr_measure()");
 		perror("pcap_setfilter in cr_measure");
-		sleep(1);
-		return 0;
+		exit(1);
 	}
 	
 	fprintf(stderr, "waiting for CC pkts in cr_measure ... ");
