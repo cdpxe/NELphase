@@ -30,14 +30,14 @@
 
 /* Some tests go here */
 #if (WARDEN_MODE == WARDEN_MODE_NO_WARDEN) && (SIM_LIMIT_FOR_BLOCKED_SENDING != 50)
-	#error SIM_LIMIT_FOR_BLOCKED_SENDING must be set to 0 if in NO-warden mode!
+	#error Please check source code: SIM_LIMIT_FOR_BLOCKED_SENDING must be set to 50 if in NO-warden mode in file nel.h!
 #endif
 
 #if (WARDEN_MODE == WARDEN_MODE_DYN_WARDEN) && (ANNOUNCED_PROTO_NUMBERS - SIM_LIMIT_FOR_BLOCKED_SENDING) < 1
-	#error Please check source code for error 0x377: too many blocked rules!
+	#error Please check source code: too many blocked rules in file nel.h!
 #endif
 
 #if (WARDEN_MODE == WARDEN_MODE_ADP_WARDEN) && (ANNOUNCED_PROTO_NUMBERS - SIM_LIMIT_FOR_BLOCKED_SENDING - SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE) < 1
-	#error Please check source code for error 0x378: too many inactive + blocked rules in combination.
+	#error Please check source code: too many inactive + blocked rules in combination in file nel.h.
 #endif
 

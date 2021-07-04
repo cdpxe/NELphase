@@ -92,7 +92,7 @@
  * 2=sender will send 4% (block 96%) of the probe packets;
  * 25=sender will send/block 50% of the probe packets;
  * 50=sender will send 100% of the probe protocols (DEFAULT) */
-#define SIM_LIMIT_FOR_BLOCKED_SENDING 25
+#define SIM_LIMIT_FOR_BLOCKED_SENDING 50
 /* WARDEN_MODE_DYN/ADP -> RELOAD_INTERVAL [seconds]:
  * After how many seconds should we shuffle the active rules again?
  * Note: This is not exact. It is always RELOAD_INTERVAL+small overhead.
