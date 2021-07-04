@@ -38,6 +38,8 @@ int recv_through_warden_pkt_cnt = 0;
 
 extern char *ruleset[ANNOUNCED_PROTO_NUMBERS][3];
 
+extern u_int32_t goalcfg;
+
 /* / from CCEAP: client.c \ */
 void print_time_diff(void)
 {
@@ -80,14 +82,36 @@ void pkt_handler_COM(u_char *user, const struct pcap_pkthdr *h,
 			 const u_char *bytes)
 {
 	recv_through_warden_pkt_cnt++;
-	fprintf(stderr, "received: %d packets\n", recv_through_warden_pkt_cnt);
+	fprintf(stderr, "received: %d packets\n", recv_through_warden_pkt_cnt); fflush(stderr);
 
 	if (recv_through_warden_pkt_cnt >= NUM_OVERALL_REQ_PKTS) {
+		u_int32_t warden;
+		u_int32_t blocked;
+		u_int32_t reload_interval;
+		u_int32_t inactive_checked2active;
+		
 		fprintf(stderr, "MEASUREMENT COMPLETED; received %i CC "
 			"packets through warden link (through combined "
 			"pcap filter, i.e. excluding non-CC traffic).\n",
 			NUM_OVERALL_REQ_PKTS);
 		print_time_diff();
+		
+		warden = (goalcfg & 0xff000000) >> 24;
+		blocked = (goalcfg & 0x00ff0000) >> 16;
+		reload_interval = (goalcfg & 0x0000ff00) >> 8;
+		inactive_checked2active = (goalcfg & 0x000000ff);
+		
+		fprintf(stderr,
+			"CS's configuration: warden=0x%X (%s), non-blocked=%i/%i (%f%%), "
+			"reload_interval=%i, inactive_checked2active=%i\n",
+			warden,
+			(warden == WARDEN_MODE_NO_WARDEN ? "NO warden" :
+				(warden == WARDEN_MODE_REG_WARDEN ? "REGULAR warden" :
+					(warden == WARDEN_MODE_DYN_WARDEN ? "DYNAMIC warden" :
+						(warden == WARDEN_MODE_ADP_WARDEN ? "simplif. ADAPTIVE warden" :
+							"UNKNOWN(!!!) warden")))),
+			blocked, ANNOUNCED_PROTO_NUMBERS, (float)blocked/(float)ANNOUNCED_PROTO_NUMBERS,
+			reload_interval, inactive_checked2active);
 		fflush(stderr);fflush(stdout);
 		exit(0);
 	}
@@ -139,11 +163,13 @@ void *cr_measure(void *unused)
 		filter_str);
 	if (pcap_compile(handle_measure, &filter, filter_str, 0,
 			PCAP_NETMASK_UNKNOWN) != 0) {
+		fprintf(stderr, "pcap_compile() error in cr_measure()");
 		pcap_perror(handle_measure, "pcap_compile in cr_measure");
 		sleep(1);
 		return 0;
 	}
 	if (pcap_setfilter(handle_measure, &filter) == -1) {
+		fprintf(stderr, "pcap_setfilter() error in cr_measure()");
 		perror("pcap_setfilter in cr_measure");
 		sleep(1);
 		return 0;
@@ -157,7 +183,9 @@ void *cr_measure(void *unused)
 	while (!global_measurement_start) {
 		sleep(1);
 	}
+	printf("Starting timer: ");
 	print_time_diff();
+	
 	pcap_loop(handle_measure, 0 /*inf pkts*/, pkt_handler_COM, NULL);
 	
 	pcap_close(handle_measure);

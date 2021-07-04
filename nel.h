@@ -79,6 +79,7 @@
  * how many packets to be sent per CC type during *NEL* phase */
 #define NUM_NEL_TESTPKT_SND_PKTS_P_PROT 5
 
+/* All warden macros must be <0xff */
 #define WARDEN_MODE_NO_WARDEN           0x10
 #define WARDEN_MODE_REG_WARDEN          0x20 /* regular warden */
 #define WARDEN_MODE_DYN_WARDEN          0x40 /* dynamic warden (Mazurczyk et al.) */
@@ -92,12 +93,12 @@
  * 2=sender will send 4% (block 96%) of the probe packets;
  * 25=sender will send/block 50% of the probe packets;
  * 50=sender will send 100% of the probe protocols (DEFAULT) */
-#define SIM_LIMIT_FOR_BLOCKED_SENDING 50
+#define SIM_LIMIT_FOR_BLOCKED_SENDING 50 /* must be <=50 and <0xff */
 /* WARDEN_MODE_DYN/ADP -> RELOAD_INTERVAL [seconds]:
  * After how many seconds should we shuffle the active rules again?
  * Note: This is not exact. It is always RELOAD_INTERVAL+small overhead.
  */
-#define RELOAD_INTERVAL		 10
+#define RELOAD_INTERVAL		 10 /* must be <0xff */
 /* WARDEN_MODE_ADP -> SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE:
  * How many of the recently triggered inactive rules are activated
  * during the next run?
@@ -105,7 +106,7 @@
  * 2=the 2 latest triggered rules would be moved
  * 50=All rules will be moved (i.e. warden only based on observations of triggers!)
  */
-#define SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE  5
+#define SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE  5 /* must be <0xff */
 
 
 /* remaining basic definitions */
@@ -125,6 +126,7 @@ typedef struct {
 #define RESULT_RECVD		0x01 /* received during time-slot */
 #define RESULT_TIMEOUT		0x00 /* not received during time-slot */
 	u_int32_t		result;
+	u_int32_t		goalcfg; /* used by CS to tell CR what the config is */
 } nel_proto_t;
 
 void *cs_COMM_sender(void *);

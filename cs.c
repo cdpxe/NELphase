@@ -36,7 +36,7 @@ char *ruleset[ANNOUNCED_PROTO_NUMBERS+1][3] = {
 	/* update ANNOUNCED_PROTO_NUMBERS after adding new proto here! */
 	{ "[1] IPv4 w/ reserved flag set",
 		"a=IP(flags=0x4)",
-		"ip[6] = 0x80" },
+		"ip[6] == 0x80" },
 	{ "[2] IPv4 w/ identifier embedded CC",
 		"a=IP(id=0x270f)",
 		"ip[4:2] == 0x270f" },
@@ -55,7 +55,7 @@ char *ruleset[ANNOUNCED_PROTO_NUMBERS+1][3] = {
 
 	{ "[7] ICMP echo-embedded CC data",
 		"a=IP()/ICMP()/\"Covert.Channel\"",
-		"icmp[icmptype] = icmp-echo and icmp[icmpcode] = 0 and icmp[8]=0x43" },
+		"icmp[icmptype] == icmp-echo and icmp[icmpcode] == 0 and icmp[8]==0x43" },
 	{ "[8] ICMP t.= 3 w/ embed. data in unused fld",
 		"a=IP()/ICMP(type=3, unused=0x1F3)",
 		"icmp[icmptype]=3 and icmp[4:4]==0x1F3" }, /* was rule 14 */
@@ -199,8 +199,7 @@ char *ruleset[ANNOUNCED_PROTO_NUMBERS+1][3] = {
 int ruleset_activation[ANNOUNCED_PROTO_NUMBERS];
 time_t ruleset_checked[ANNOUNCED_PROTO_NUMBERS];
 int preparation_done = 0;
-
-
+u_int32_t goalcfg = WARDEN_MODE << 24 | SIM_LIMIT_FOR_BLOCKED_SENDING << 16 | RELOAD_INTERVAL << 8 | SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE;
 /*************************
  * SHARED: NEL+COMM PHASE
  *************************/
@@ -209,6 +208,7 @@ int preparation_done = 0;
  * again.
  */
 u_int32_t P_nb[ANNOUNCED_PROTO_NUMBERS] = { 0 };
+
 
 /* cs-internal debug function */
 void print_Pnb(void)
@@ -314,6 +314,7 @@ void *cs_NEL_handler(void *sockfd_ptr)
 		srand(time(NULL));
 		buf.announced_proto = rand() % ANNOUNCED_PROTO_NUMBERS;
 #endif
+		buf.goalcfg = goalcfg; /* tell the CR about our configuration */
 		if ((n = send(*sockfd, &buf, sizeof(buf), 0)) < 0) {
 			perror("send()");
 			sleep(1);
