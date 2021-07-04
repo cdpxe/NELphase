@@ -1,6 +1,6 @@
 CHANGELOG for the NEL tool
 
-v. current (0.4.0) (2021-July-03):
+v. current (0.4.0-alpha) (2021-July-04):
  * Add an option to simulate a regular warden by defining a
    fraction of CCs that are blocked (by simply preventing
    their probe packets being sent. Made sure time consumption
@@ -10,6 +10,10 @@ v. current (0.4.0) (2021-July-03):
  * Remove unnecessary cs.h
  * Put some macro checks in separate file so that some major
    configuration mistakes are caught.
+ * Tell the CR about the configuration (type of warden and its
+   settings) so that it can be displayed when NEL phase is
+   completed to ease the analysis process. This is useful in
+   combination with a typescript (see script(1)).
 
 v. 0.2.5:
  * slightly updated the markdown files (also pointed out the
