@@ -81,6 +81,7 @@ int rc_chk_for_test_pkts(u_int32_t announced_proto)
 	
 	if ((handle = pcap_open_live(net_if, snapshot_len, promisc, timeout,
 	    err_buf)) == NULL) {
+	    	fprintf(stderr, "pcap_open_live() error in cr.c!\n");
 		perror("pcap_open_live");
 		sleep(1);
 		return 0;
@@ -88,12 +89,14 @@ int rc_chk_for_test_pkts(u_int32_t announced_proto)
 	
 	if (pcap_compile(handle, &filter, filter_str, 0,
 	    PCAP_NETMASK_UNKNOWN) != 0) {
+	    	fprintf(stderr, "pcap_compile() error in cr.c!\n");
 		pcap_perror(handle, "pcap_compile in CR");
 		sleep(1);
 		return 0;
 	}
 	if (pcap_setfilter(handle, &filter) == -1) {
 		perror("pcap_setfilter");
+		fprintf(stderr, "pcap_setfilter() error in cr.c!\n");
 		sleep(1);
 		return 0;
 	}
@@ -109,6 +112,7 @@ int rc_chk_for_test_pkts(u_int32_t announced_proto)
 	/* make pcap non-blocking so that pcap_dispatch() always returns
 	 * immediately */
 	if (pcap_setnonblock(handle, 1, err_buf) == -1) {
+		fprintf(stderr, "pcap_setnonblock() error in cr.c!\n");
 		perror("pcap_setnonblock()");
 		sleep(1);
 		return 0;
