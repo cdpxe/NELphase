@@ -107,18 +107,6 @@
  */
 #define SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE  5
 
-/* Some tests go here */
-#if (WARDEN_MODE == WARDEN_MODE_NO_WARDEN) && (SIM_LIMIT_FOR_BLOCKED_SENDING != 50)
-	#error SIM_LIMIT_FOR_BLOCKED_SENDING must be set to 0 if in NO-warden mode!
-#endif
-
-#if (WARDEN_MODE == WARDEN_MODE_DYN_WARDEN) && (ANNOUNCED_PROTO_NUMBERS - SIM_LIMIT_FOR_BLOCKED_SENDING) < 1
-	#error Please check source code for error 0x377: too many blocked rules!
-#endif
-
-#if (WARDEN_MODE == WARDEN_MODE_ADP_WARDEN) && (ANNOUNCED_PROTO_NUMBERS - SIM_LIMIT_FOR_BLOCKED_SENDING - SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE) < 1
-	#error Please check source code for error 0x378: too many inactive + blocked rules in combination.
-#endif
 
 /* remaining basic definitions */
 #define MODE_UNSET		0x00

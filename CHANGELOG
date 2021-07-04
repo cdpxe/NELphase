@@ -8,6 +8,8 @@ v. current (0.4.0) (2021-July-03):
  * Added option to simulate a regular warden.
  * Added option to simulate a *simplified* adaptive warden.
  * Remove unnecessary cs.h
+ * Put some macro checks in separate file so that some major
+   configuration mistakes are caught.
 
 v. 0.2.5:
  * slightly updated the markdown files (also pointed out the

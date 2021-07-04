@@ -1,4 +1,4 @@
-CFILES=nel.c helper.c cr.c cs.c cr_measure.c
+CFILES=nel.c helper.c cr.c cs.c cr_measure.c config_chk.c
 SRCFILES=$(CFILES) nel.h
 OBJFILES=nel.o helper.o cr.o cr_measure.o cs.o
 BINARY=nel
@@ -19,7 +19,7 @@ count :
 	wc -l $(SRCFILES) | sort -bg
 
 tgz :
-	tar -czvf nel.tgz *.c *.h Makefile
+	tar -czvf nel.tgz $(SRCFILES) Makefile
 
 
 #### debug/development stuff below
