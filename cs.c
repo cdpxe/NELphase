@@ -226,7 +226,6 @@ void send_CC_packet(u_int32_t announced_proto)
 {
 	extern char *warden_link_ip;
 	char *scapy_cmd;
-	int i = 0;
 	char buf[2048] = {'\0'};
 	
 	printf("sending protocol %i...\n", announced_proto);
