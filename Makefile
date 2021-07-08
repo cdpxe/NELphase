@@ -1,13 +1,12 @@
-CFILES=nel.c helper.c cr.c cs.c cr_measure.c config_chk.c
+CFILES=nel.c helper.c cr.c cr_measure.c cs.c config_chk.c
 SRCFILES=$(CFILES) nel.h
-OBJFILES=nel.o helper.o cr.o cr_measure.o cs.o
 BINARY=nel
 CC=gcc
-CFLAGS=-Wall -Wshadow -Wunused
+CFLAGS=-Wall -Wshadow -Wunused -O
 LIBS=-pthread -lpcap
 
 all:
-	$(CC) -O -o $(BINARY) $(CFILES) $(LIBS)
+	$(CC) $(CFLAGS) -o $(BINARY) $(CFILES) $(LIBS)
 
 e :
 	kate $(SRCFILES) || pluma $(SRCFILES)
