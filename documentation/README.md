@@ -198,7 +198,7 @@ For the NEL phase, another aspect of covert channels is also important. Covert c
 
 # References
 
-- M. Chourib, S. Wendzel, W. Mazurczyk: Adaptive Warden Strategy for Countering Network Covert Storage Channels, in Proc. 36th Conference on Local Computer Networks (LCN), IEEE, 2021 (in press).
+- M. Chourib, S. Wendzel, W. Mazurczyk: Adaptive Warden Strategy for Countering Network Covert Storage Channels, in Proc. 36th Conference on Local Computer Networks (LCN), IEEE, 2021, [PDF](https://arxiv.org/abs/2111.03310).
 
 - W. Mazurczyk, S. Wendzel, M. Chourib, J. Keller: [Countering Adaptive Network Covert Communication with Dynamic Wardens](https://www.sciencedirect.com/science/article/pii/S0167739X18316133), Future Generation Computer Systems (FGCS), Vol. 94, pp. 712-725, Elsevier, 2019.
 
