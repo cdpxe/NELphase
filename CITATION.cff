@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Wendzel"
+  given-names: "Steffen"
+  orcid: "https://orcid.org/0000-0002-1913-5912"
+title: "The problem of traffic normalization within a covert channel’s network environment learning phase"
+version: 1.0.0
+date-released: 2012-04-01
+url: "https://github.com/cdpxe/NetworkCovertChannels/tree/master/pcaw"
+preferred-citation:
+  type: article
+  authors:
+  - family-names: "Wendzel"
+    given-names: "Steffen"
+    orcid: "https://orcid.org/0000-0002-1913-5912"
+  journal: "SICHERHEIT 2012 – Sicherheit, Schutz und Zuverlässigkeit"
+  start: 149 # First page number
+  end: 161 # Last page number
+  title: "The problem of traffic normalization within a covert channel’s network environment learning phase"
+  url: "https://dl.gi.de/handle/20.500.12116/18270"
+  year: 2012
