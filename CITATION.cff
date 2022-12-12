@@ -14,7 +14,8 @@ preferred-citation:
   - family-names: "Wendzel"
     given-names: "Steffen"
     orcid: "https://orcid.org/0000-0002-1913-5912"
-  journal: "SICHERHEIT 2012 – Sicherheit, Schutz und Zuverlässigkeit"
+  conference:
+      name: "SICHERHEIT 2012 – Sicherheit, Schutz und Zuverlässigkeit"
   start: 149 # First page number
   end: 161 # Last page number
   title: "The problem of traffic normalization within a covert channel’s network environment learning phase"
