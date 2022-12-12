@@ -9,7 +9,7 @@ version: 1.0.0
 date-released: 2012-04-01
 url: "https://github.com/cdpxe/NELphase/tree/master"
 preferred-citation:
-  type: article
+  type: conference-paper
   authors:
   - family-names: "Wendzel"
     given-names: "Steffen"
