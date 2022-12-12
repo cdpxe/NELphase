@@ -7,7 +7,7 @@ authors:
 title: "The problem of traffic normalization within a covert channel’s network environment learning phase"
 version: 1.0.0
 date-released: 2012-04-01
-url: "https://github.com/cdpxe/NetworkCovertChannels/tree/master/pcaw"
+url: "https://github.com/cdpxe/NELphase/tree/master"
 preferred-citation:
   type: article
   authors:
