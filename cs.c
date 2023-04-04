@@ -199,7 +199,7 @@ char *ruleset[ANNOUNCED_PROTO_NUMBERS+1][3] = {
 int ruleset_activation[ANNOUNCED_PROTO_NUMBERS];
 time_t ruleset_checked[ANNOUNCED_PROTO_NUMBERS];
 int preparation_done = 0;
-u_int32_t goalcfg = WARDEN_MODE << 24 | SIM_LIMIT_FOR_BLOCKED_SENDING << 16 | RELOAD_INTERVAL << 8 | SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE;
+u_int32_t goalcfg_cs = WARDEN_MODE << 24 | SIM_LIMIT_FOR_BLOCKED_SENDING << 16 | RELOAD_INTERVAL << 8 | SIM_INACTIVE_CHECKED_MOVE_TO_ACTIVE;
 /*************************
  * SHARED: NEL+COMM PHASE
  *************************/
@@ -313,7 +313,7 @@ void *cs_NEL_handler(void *sockfd_ptr)
 		srand(time(NULL));
 		buf.announced_proto = rand() % ANNOUNCED_PROTO_NUMBERS;
 #endif
-		buf.goalcfg = goalcfg; /* tell the CR about our configuration */
+		buf.goalcfg = goalcfg_cs; /* tell the CR about our configuration */
 		if ((n = send(*sockfd, &buf, sizeof(buf), 0)) < 0) {
 			perror("send()");
 			sleep(1);

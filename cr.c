@@ -32,7 +32,7 @@ extern char *ruleset[ANNOUNCED_PROTO_NUMBERS][3];
 int test_traffic_pkt_cnt = 0;
 int stop_test_traffic_pcap_loop = 0;
 pcap_t *handle;
-u_int32_t goalcfg;
+u_int32_t goalcfg_cr;
 
 void cr_pcap_interrupt_alarm_handler(int a)
 {
@@ -149,7 +149,7 @@ void *cr_NEL_handler(void *clifd_ptr)
 				"proto=='%s' (ar-elem=%i), config=0x%X\n",
 				ruleset[buf.announced_proto][0],
 				buf.announced_proto, buf.goalcfg);
-			goalcfg = buf.goalcfg; /* only required once but still updated in every iteration */
+			goalcfg_cr = buf.goalcfg; /* only required once but still updated in every iteration */
 			/* In case we do not measure time so far,
 			 * start measuring time NOW. */
 			global_measurement_start = 1;

@@ -38,7 +38,7 @@ int recv_through_warden_pkt_cnt = 0;
 
 extern char *ruleset[ANNOUNCED_PROTO_NUMBERS][3];
 
-extern u_int32_t goalcfg;
+extern u_int32_t goalcfg_cr;
 
 /* / from CCEAP: client.c \ */
 void print_time_diff(void)
@@ -96,10 +96,10 @@ void pkt_handler_COM(u_char *user, const struct pcap_pkthdr *h,
 			NUM_OVERALL_REQ_PKTS);
 		print_time_diff();
 		
-		warden = (goalcfg & 0xff000000) >> 24;
-		blocked = (goalcfg & 0x00ff0000) >> 16;
-		reload_interval = (goalcfg & 0x0000ff00) >> 8;
-		inactive_checked2active = (goalcfg & 0x000000ff);
+		warden = (goalcfg_cr & 0xff000000) >> 24;
+		blocked = (goalcfg_cr & 0x00ff0000) >> 16;
+		reload_interval = (goalcfg_cr & 0x0000ff00) >> 8;
+		inactive_checked2active = (goalcfg_cr & 0x000000ff);
 		
 		fprintf(stderr,
 			"CS's configuration: warden=0x%X (%s), non-blocked=%i/%i (%f%%), "
