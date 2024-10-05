@@ -17,7 +17,6 @@ Although the NEL phase was originally discussed in academia about ten years ago,
 
 **My open online class on Network Covert Channels:** available [here](https://github.com/cdpxe/Network-Covert-Channels-A-University-level-Course).
 
-**Covert Channel Detection System:** If you are looking for a network covert channel detector, have a look at my project *[NeFiAS](https://github.com/cdpxe/nefias)*.
 
 **Other Covert Channel Tools:** See my repository on [network covert channel tools](https://github.com/cdpxe/NetworkCovertChannels).
 

@@ -1,6 +1,6 @@
 # NEL – A Tool to Simulate a Network Environment Learning Phase in Network Steganography
 
-Written by *Steffen Wendzel*, [www.wendzel.de](https://www.wendzel.de) (wendzel (at) hs-worms (dot) de). Research on the NEL phase is currently performed by multiple authors, cf. [our project website](https://ih-patterns.blogspot.de/p/authorscontact.html).
+Written by *Steffen Wendzel*, [www.wendzel.de](https://www.wendzel.de) (wendzel (at) hs-worms (dot) de).
 
 ## Introduction
 
@@ -8,8 +8,7 @@ In *Network Steganography* research, a *covert channel* is a stealthy communicat
 
 * our [overview paper](https://cacm.acm.org/magazines/2018/1/223894/fulltext)
 * [our short video](https://vimeo.com/245230404) (4min)
-* [my overview video](http://ih-patterns.blogspot.de/2018/04/talk-on-information-hiding-and-hiding.html) (31min)
-* my [MOOC (*massive open online class*) on Network Covert Channels](https://github.com/cdpxe/Network-Covert-Channels-A-University-level-Course)
+* my [online class on Network Covert Channels](https://github.com/cdpxe/Network-Covert-Channels-A-University-level-Course)
 * see (Mazurczyk et al., 2016) for detailled fundamentals
 
 Some covert channels are capable of performing a so-called [**Network Environment Learning** phase](https://www.researchgate.net/publication/229091999_The_Problem_of_Traffic_Normalization_Within_a_Covert_Channel%27s_Network_Environment_Learning_Phase?ev=srch_pub&_sg=yiWm%2Fl1DEUeQDayeMTW0oEMG5Uyxo4zfcmAAOkr6NkJtTx6g7xucnaWMAIFkzvlq_n6tx%2Fpj8MwJkZ%2FDhSCYZtVcY3G8XFjtuD0wGGY97liDms58KUp77JmWf%2F2uLjaFg_9rtZQe80mfDWVt%2BOxdHhJvIgvvSP8%2FJUpvi9Tx32b%2BASAG60z5JBglEJw%2Fx0RbUK) (or: NEL phase). Such NEL-capable covert channels ...
@@ -198,12 +197,11 @@ For the NEL phase, another aspect of covert channels is also important. Covert c
 
 # References
 
-- M. Chourib, S. Wendzel, W. Mazurczyk: Adaptive Warden Strategy for Countering Network Covert Storage Channels, in Proc. 36th Conference on Local Computer Networks (LCN), IEEE, 2021, [PDF](https://arxiv.org/abs/2111.03310).
+- M. Chourib, S. Wendzel, W. Mazurczyk: Adaptive Warden Strategy for Countering Network Covert Storage Channels, [PDF](https://arxiv.org/abs/2111.03310).
 
 - W. Mazurczyk, S. Wendzel, M. Chourib, J. Keller: [Countering Adaptive Network Covert Communication with Dynamic Wardens](https://www.sciencedirect.com/science/article/pii/S0167739X18316133), Future Generation Computer Systems (FGCS), Vol. 94, pp. 712-725, Elsevier, 2019.
 
 - W. Mazurczyk, S. Wendzel: [Information Hiding – Challenges for Forensic Experts](https://cacm.acm.org/magazines/2018/1/223894-information-hiding/fulltext), Communications of the ACM, Vol. 61(1), pp. 86-94, January 2018. [Summarizing video](https://vimeo.com/245230404)
-
 
 - W. Mazurczyk, S. Wendzel, S. Zander, A. Houmansadr, K. Szczypiorski (2016): *[Information Hiding in Communication Networks: Fundamentals, Mechanisms, Applications, and Countermeasures](http://eu.wiley.com/WileyCDA/WileyTitle/productCd-1118861698.html)*, Wiley-IEEE press.
 
@@ -218,8 +216,7 @@ For the NEL phase, another aspect of covert channels is also important. Covert c
 - F. V. Yarochkin, S. Y. Dai, C.-H. Lin, Y. Huang, S.-Y. Kuo (2008): *Towards Adaptive Covert Communication System*, Proc. 2008 14th IEEE Pacific Rim International Symposium on Dependable Computing, pp. 153-159, IEEE.
 
 ## Websites
-- [Information Hiding Patterns Project](http://ih-patterns.blogspot.de/p/authorscontact.html)
-- [Massive Open Online Class on Network Information Hiding](https://github.com/cdpxe/Network-Covert-Channels-A-University-level-Course)
+- [Information hiding patterns project](https://patterns.ztt.hs-worms.de/NIHPattern/)
+- [My open online class on network information hiding](https://github.com/cdpxe/Network-Covert-Channels-A-University-level-Course)
 - [Github repository with several network covert channels](https://github.com/cdpxe/NetworkCovertChannels)
-- [Open Covert Channel Detection System](https://github.com/cdpxe/nefias) (also Github)
 - [CCEAP](https://github.com/cdpxe/CCEAP) covert channels learning tool
