@@ -1,6 +1,6 @@
 # NEL – A Tool to Simulate a Network Environment Learning Phase in Network Steganography
 
-Written by *Steffen Wendzel*, [www.wendzel.de](https://www.wendzel.de) (wendzel (at) hs-worms (dot) de).
+Written by *Steffen Wendzel*, [www.wendzel.de](https://www.wendzel.de)
 
 ## Introduction
 
@@ -186,7 +186,7 @@ If you used NELTool for your experiments, let me know and I am happy to link you
 
 # Bug Reports, Patches and Extensions
 
-Please send bug reports/patches and extensions (also in the form of patches) to the author (`wendzel (at) hs-worms (dot) de`) so that these improvements can be provided to all users.
+Please send bug reports/patches and extensions (also in the form of patches) to the author so that these improvements can be provided to all users.
 
 # Additional Background
 
