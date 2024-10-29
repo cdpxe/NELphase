@@ -46,9 +46,7 @@
 #define TOOL_VERSION		"0.4.0"
 #define WELCOME_MESSAGE		"NEL: Implementation of a Network Environment Learning (NEL) Phase\n" \
 				"     for Network Covert Channel Research\n\n" \
-				"(C) 2017-2021 Steffen Wendzel (wendzel (at) hs-worms (dot) de), " \
-				"Network Security Research Group (NSRG), " \
-				"Worms University of Applied Sciences, " \
+				"(C) 2017-2021 Steffen Wendzel (steffen (at) wendzel (dot) de), " \
 				"WWW: https://www.wendzel.de\n" \
 				"Version " TOOL_VERSION "\n\n"
 
@@ -68,7 +66,7 @@
 /* NUM_OVERALL_REQ_PKTS:
  * number of CC packets (overall) that must go through warden
  * before we count NEL as completed */
-#define NUM_OVERALL_REQ_PKTS		100
+#define NUM_OVERALL_REQ_PKTS		400
 
 /* NUM_COMM_PHASE_SND_PKTS_P_PROT:
  * how many packets to send during the *COMM* phase per
