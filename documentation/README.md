@@ -197,7 +197,7 @@ For the NEL phase, another aspect of covert channels is also important. Covert c
 
 # References
 
-- M. Chourib, S. Wendzel, W. Mazurczyk: Adaptive Warden Strategy for Countering Network Covert Storage Channels, [PDF](https://arxiv.org/abs/2111.03310).
+- S. Wendzel, L. Caviglione, W. Mazurczyk, A. Mileva, J. Dittmann, C. Krätzer, K. Lamshöft, C. Vielhauer, L. Hartmann, J. Keller, T. Neubert, S. Zillien: *[A Generic Taxonomy for Steganography Methods](https://dx.doi.org/10.1145/3729165)*, ACM Computing Surveys, 2025.
 
 - W. Mazurczyk, S. Wendzel, M. Chourib, J. Keller: [Countering Adaptive Network Covert Communication with Dynamic Wardens](https://www.sciencedirect.com/science/article/pii/S0167739X18316133), Future Generation Computer Systems (FGCS), Vol. 94, pp. 712-725, Elsevier, 2019.
 
@@ -216,7 +216,7 @@ For the NEL phase, another aspect of covert channels is also important. Covert c
 - F. V. Yarochkin, S. Y. Dai, C.-H. Lin, Y. Huang, S.-Y. Kuo (2008): *Towards Adaptive Covert Communication System*, Proc. 2008 14th IEEE Pacific Rim International Symposium on Dependable Computing, pp. 153-159, IEEE.
 
 ## Websites
-- [Information hiding patterns project](https://patterns.ztt.hs-worms.de/NIHPattern/)
+- [Information hiding patterns project](https://patterns.omi.uni-ulm.de/)
 - [My open online class on network information hiding](https://github.com/cdpxe/Network-Covert-Channels-A-University-level-Course)
 - [Github repository with several network covert channels](https://github.com/cdpxe/NetworkCovertChannels)
 - [CCEAP](https://github.com/cdpxe/CCEAP) covert channels learning tool
